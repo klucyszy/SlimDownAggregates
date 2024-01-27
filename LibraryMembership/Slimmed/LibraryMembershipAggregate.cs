@@ -6,16 +6,16 @@ namespace LibraryMembership.Slimmed;
 
 public abstract class LibraryMembershipAggregate
 {
-    private readonly List<BookLoan> _bookLoans;
-    private readonly List<BookReservation> _bookReservations;
-    private readonly List<Fine> _fines;
+    private readonly List<BookLoanModel> _bookLoans;
+    private readonly List<BookReservationModel> _bookReservations;
+    private readonly List<FineModel> _fines;
 
-    public IReadOnlyList<BookLoan> BookLoans => _bookLoans;
-    public IReadOnlyList<BookReservation> BookReservations => _bookReservations;
-    public IReadOnlyList<Fine> Fines => _fines;
+    public IReadOnlyList<BookLoanModel> BookLoans => _bookLoans;
+    public IReadOnlyList<BookReservationModel> BookReservations => _bookReservations;
+    public IReadOnlyList<FineModel> Fines => _fines;
 
-    private LibraryMembershipAggregate(List<BookLoan> bookLoans, List<BookReservation> bookReservations,
-        List<Fine> fines)
+    private LibraryMembershipAggregate(List<BookLoanModel> bookLoans, List<BookReservationModel> bookReservations,
+        List<FineModel> fines)
     {
         _bookLoans = bookLoans;
         _bookReservations = bookReservations;
@@ -24,29 +24,29 @@ public abstract class LibraryMembershipAggregate
 
     public sealed class Active : LibraryMembershipAggregate
     {
-        public Active(List<BookLoan> bookLoans, List<BookReservation> bookReservations, List<Fine> fines)
+        public Active(List<BookLoanModel> bookLoans, List<BookReservationModel> bookReservations, List<FineModel> fines)
             : base(bookLoans, bookReservations, fines)
         {
         }
 
-        public void AddLoan(BookLoan loan)
+        public void AddLoan(BookLoanModel loanModel)
         {
             if (_bookLoans.Count >= 5)
             {
                 throw new InvalidOperationException("Loan limit exceeded");
             }
 
-            if (_bookLoans.Any(x => x.BookId == loan.BookId))
+            if (_bookLoans.Any(x => x.BookId == loanModel.BookId))
             {
-                throw new InvalidOperationException("Cannot loan same book twice");
+                throw new InvalidOperationException("Cannot loanModel same book twice");
             }
 
-            _bookLoans.Add(loan);
+            _bookLoans.Add(loanModel);
         }
 
         public void ReturnLoan(Guid loanId)
         {
-            BookLoan? loan = _bookLoans.FirstOrDefault(l => l.LoanId == loanId);
+            BookLoanModel? loan = _bookLoans.FirstOrDefault(l => l.LoanId == loanId);
             if (loan is null)
             {
                 return;
@@ -55,10 +55,10 @@ public abstract class LibraryMembershipAggregate
             _bookLoans.Remove(loan);
         }
 
-        // TODO: Should be possible only if there is no reservation for this book
+        // TODO: Should be possible only if there is no reservationModel for this book
         public void ApplyExtension(Guid loanId, DateTimeOffset now)
         {
-            BookLoan? loan = _bookLoans.FirstOrDefault(l => l.LoanId == loanId);
+            BookLoanModel? loan = _bookLoans.FirstOrDefault(l => l.LoanId == loanId);
             if (loan is null)
             {
                 throw new InvalidOperationException("Loan not found");
@@ -66,25 +66,25 @@ public abstract class LibraryMembershipAggregate
 
             if (loan.IsOverdue(now))
             {
-                throw new InvalidOperationException("Cannot extend overdue loan");
+                throw new InvalidOperationException("Cannot extend overdue loanModel");
             }
 
             loan.ApplyExtension(now);
         }
 
-        public void AddReservation(BookReservation reservation)
+        public void AddReservation(BookReservationModel reservationModel)
         {
-            if (_bookReservations.Any(x => x.BookId == reservation.BookId))
+            if (_bookReservations.Any(x => x.BookId == reservationModel.BookId))
             {
                 throw new InvalidOperationException("Cannot reserve same book twice");
             }
 
-            _bookReservations.Add(reservation);
+            _bookReservations.Add(reservationModel);
         }
 
         public void CancelReservation(Guid reservationId)
         {
-            BookReservation? reservation = _bookReservations
+            BookReservationModel? reservation = _bookReservations
                 .FirstOrDefault(r => r.ReservationId == reservationId);
             if (reservation is null)
             {
@@ -97,49 +97,49 @@ public abstract class LibraryMembershipAggregate
 
     public sealed class Suspended : LibraryMembershipAggregate
     {
-        public Suspended(List<BookLoan> bookLoans, List<BookReservation> bookReservations, List<Fine> fines)
+        public Suspended(List<BookLoanModel> bookLoans, List<BookReservationModel> bookReservations, List<FineModel> fines)
             : base(bookLoans, bookReservations, fines)
         {
         }
 
         public void PayFine(Guid fineId)
         {
-            Fine fine = _fines.FirstOrDefault(f => f.FineId == fineId);
-            if (fine is null)
+            FineModel fineModel = _fines.FirstOrDefault(f => f.FineId == fineId);
+            if (fineModel is null)
             {
                 return;
             }
             
-            if (fine.IsPaid)
+            if (fineModel.IsPaid)
             {
                 return;
             }
             
-            fine.MarkAsPaid();
+            fineModel.MarkAsPaid();
         }
     }
 
     public sealed class Expired : LibraryMembershipAggregate
     {
-        public Expired(List<BookLoan> bookLoans, List<BookReservation> bookReservations, List<Fine> fines)
+        public Expired(List<BookLoanModel> bookLoans, List<BookReservationModel> bookReservations, List<FineModel> fines)
             : base(bookLoans, bookReservations, fines)
         {
         }
 
         public void PayFine(Guid fineId)
         {
-            Fine fine = _fines.FirstOrDefault(f => f.FineId == fineId);
-            if (fine is null)
+            FineModel fineModel = _fines.FirstOrDefault(f => f.FineId == fineId);
+            if (fineModel is null)
             {
                 return;
             }
             
-            if (fine.IsPaid)
+            if (fineModel.IsPaid)
             {
                 return;
             }
             
-            fine.MarkAsPaid();
+            fineModel.MarkAsPaid();
         }
 
         public void RenewMembership()
@@ -147,8 +147,8 @@ public abstract class LibraryMembershipAggregate
         }
     }
 
-    public static LibraryMembershipAggregate Create(List<BookLoan> bookLoans,
-        List<BookReservation> bookReservations, List<Fine> fines, DateTimeOffset membershipExpiry, DateTimeOffset now)
+    public static LibraryMembershipAggregate Create(List<BookLoanModel> bookLoans,
+        List<BookReservationModel> bookReservations, List<FineModel> fines, DateTimeOffset membershipExpiry, DateTimeOffset now)
     {
         MembershipStatus status = EvaluateMembershipStatus(bookLoans, fines, membershipExpiry, now);
 
@@ -161,7 +161,7 @@ public abstract class LibraryMembershipAggregate
         };
     }
 
-    private static MembershipStatus EvaluateMembershipStatus(List<BookLoan> bookLoans, List<Fine> fines,
+    private static MembershipStatus EvaluateMembershipStatus(List<BookLoanModel> bookLoans, List<FineModel> fines,
         DateTimeOffset membershipExpiry, DateTimeOffset now)
     {
         if (membershipExpiry < now)

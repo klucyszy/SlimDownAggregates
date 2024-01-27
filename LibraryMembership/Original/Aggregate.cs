@@ -53,7 +53,7 @@ public class LibraryMembership
     {
         Fine? fine = _fines.FirstOrDefault(f => f.FineId == fineId);
         if (fine == null)
-            throw new InvalidOperationException("Fine not found");
+            throw new InvalidOperationException("FineModel not found");
 
         fine.MarkAsPaid();
         UpdateMembershipStatus();
