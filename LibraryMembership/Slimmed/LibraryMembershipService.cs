@@ -5,7 +5,12 @@ using System.Threading.Tasks;
 
 namespace LibraryMembership.Services;
 
-public sealed class LibraryMembershipService
+public interface ILibraryMembershipService
+{
+    Task<Result> AddLoanAsync(Guid membershipId, Guid bookId);
+}
+
+public sealed class LibraryMembershipService : ILibraryMembershipService
 {
     private readonly LibraryMembershipRepository _libraryMembershipRepository;
     private readonly IUnitOfWork _unitOfWork;
@@ -19,27 +24,28 @@ public sealed class LibraryMembershipService
 
     public async Task<Result> AddLoanAsync(Guid membershipId, Guid bookId)
     {
-        LibraryMembershipModel? model = await _libraryMembershipRepository
-            .GetAsync(membershipId);
+        LibraryMembershipAggregate? aggregate = await _libraryMembershipRepository
+            .GetAggregateAsync(membershipId);
         
-        if (model is null)
+        if (aggregate is null)
         {
             return Result.Failure("Membership not found");
         }
         
-        LibraryMembershipAggregate aggregate = model.ToAggregate(DateTimeOffset.Now);
-
         if (aggregate is not LibraryMembershipAggregate.Active activeMembership)
         {
             return Result.Failure("Membership is not active");
         }
 
-        activeMembership.AddLoan(new BookLoanModel(Guid.NewGuid(), bookId, DateTimeOffset.Now));
-
-        _libraryMembershipRepository.UpdateAsync(activeMembership.ToModel(model));
+        activeMembership.AddLoan(new BookLoanModel(
+            Guid.NewGuid(),
+            bookId,
+            DateTimeOffset.Now));
+        
+        _libraryMembershipRepository.UpdateAsync(activeMembership);
         
         await _unitOfWork.SaveChangesAsync();
-
+        
         return Result.Success();
     }
 }

@@ -9,14 +9,17 @@ public abstract class LibraryMembershipAggregate
     private readonly List<BookLoanModel> _bookLoans;
     private readonly List<BookReservationModel> _bookReservations;
     private readonly List<FineModel> _fines;
+    private readonly Guid _membershipId;
 
+    public Guid Id => _membershipId;
     public IReadOnlyList<BookLoanModel> BookLoans => _bookLoans;
     public IReadOnlyList<BookReservationModel> BookReservations => _bookReservations;
     public IReadOnlyList<FineModel> Fines => _fines;
 
-    private LibraryMembershipAggregate(List<BookLoanModel> bookLoans, List<BookReservationModel> bookReservations,
+    private LibraryMembershipAggregate(Guid membershipId, List<BookLoanModel> bookLoans, List<BookReservationModel> bookReservations,
         List<FineModel> fines)
     {
+        _membershipId = membershipId;
         _bookLoans = bookLoans;
         _bookReservations = bookReservations;
         _fines = fines;
@@ -24,12 +27,12 @@ public abstract class LibraryMembershipAggregate
 
     public sealed class Active : LibraryMembershipAggregate
     {
-        public Active(List<BookLoanModel> bookLoans, List<BookReservationModel> bookReservations, List<FineModel> fines)
-            : base(bookLoans, bookReservations, fines)
+        public Active(Guid membershipId, List<BookLoanModel> bookLoans, List<BookReservationModel> bookReservations, List<FineModel> fines)
+            : base(membershipId, bookLoans, bookReservations, fines)
         {
         }
 
-        public void AddLoan(BookLoanModel loanModel)
+        public LibraryMembershipEvent.LoanAdded AddLoan(BookLoanModel loanModel)
         {
             if (_bookLoans.Count >= 5)
             {
@@ -42,6 +45,12 @@ public abstract class LibraryMembershipAggregate
             }
 
             _bookLoans.Add(loanModel);
+
+            return new LibraryMembershipEvent.LoanAdded(
+                _membershipId,
+                loanModel.LoanId,
+                loanModel.BookId,
+                DateTimeOffset.Now);
         }
 
         public void ReturnLoan(Guid loanId)
@@ -97,8 +106,8 @@ public abstract class LibraryMembershipAggregate
 
     public sealed class Suspended : LibraryMembershipAggregate
     {
-        public Suspended(List<BookLoanModel> bookLoans, List<BookReservationModel> bookReservations, List<FineModel> fines)
-            : base(bookLoans, bookReservations, fines)
+        public Suspended(Guid membershipId, List<BookLoanModel> bookLoans, List<BookReservationModel> bookReservations, List<FineModel> fines)
+            : base(membershipId, bookLoans, bookReservations, fines)
         {
         }
 
@@ -121,8 +130,8 @@ public abstract class LibraryMembershipAggregate
 
     public sealed class Expired : LibraryMembershipAggregate
     {
-        public Expired(List<BookLoanModel> bookLoans, List<BookReservationModel> bookReservations, List<FineModel> fines)
-            : base(bookLoans, bookReservations, fines)
+        public Expired(Guid membershipId, List<BookLoanModel> bookLoans, List<BookReservationModel> bookReservations, List<FineModel> fines)
+            : base(membershipId, bookLoans, bookReservations, fines)
         {
         }
 
@@ -147,16 +156,16 @@ public abstract class LibraryMembershipAggregate
         }
     }
 
-    public static LibraryMembershipAggregate Create(List<BookLoanModel> bookLoans,
-        List<BookReservationModel> bookReservations, List<FineModel> fines, DateTimeOffset membershipExpiry, DateTimeOffset now)
+    public static LibraryMembershipAggregate Create(Guid membershipId, List<BookLoanModel> bookLoans,
+        List<BookReservationModel> bookReservations, List<FineModel> fines, DateTimeOffset membershipExpiry,
+        DateTimeOffset now)
     {
         MembershipStatus status = EvaluateMembershipStatus(bookLoans, fines, membershipExpiry, now);
-
         return status switch
         {
-            MembershipStatus.Active => new Active(bookLoans, bookReservations, fines),
-            MembershipStatus.Suspended => new Suspended(bookLoans, bookReservations, fines),
-            MembershipStatus.Expired => new Expired(bookLoans, bookReservations, fines),
+            MembershipStatus.Active => new Active(membershipId, bookLoans, bookReservations, fines),
+            MembershipStatus.Suspended => new Suspended(membershipId, bookLoans, bookReservations, fines),
+            MembershipStatus.Expired => new Expired(membershipId, bookLoans, bookReservations, fines),
             _ => throw new InvalidOperationException("Invalid membership status")
         };
     }

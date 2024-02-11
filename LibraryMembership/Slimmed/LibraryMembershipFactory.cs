@@ -9,6 +9,7 @@ public static class LibraryMembershipFactory
         DateTimeOffset now)
     {
         return LibraryMembershipAggregate.Create(
+            model.MembershipId,
             model.BookLoans,
             model.BookReservations,
             model.Fines, 
