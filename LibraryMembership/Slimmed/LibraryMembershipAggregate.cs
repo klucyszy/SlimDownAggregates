@@ -41,7 +41,7 @@ public abstract class LibraryMembershipAggregate
 
             if (_bookLoans.Any(x => x.BookId == loanModel.BookId))
             {
-                throw new InvalidOperationException("Cannot loanModel same book twice");
+                throw new InvalidOperationException("Cannot loan same book twice");
             }
 
             _bookLoans.Add(loanModel);

@@ -28,10 +28,24 @@ public sealed class LibraryMembershipRepository
     {
         LibraryMembershipModel? model = await _dataContext.LibraryMemberships
             .FindAsync(aggregate.Id);
-
+        
         if (model is not null)
         {
+            aggregate.ToModel(model);
+            
             _dataContext.LibraryMemberships.Update(model);
+
+            foreach (BookLoanModel loans in model.BookLoans)
+            {
+                if (loans.EntityState == EntityState.Added)
+                {
+                    _dataContext.BookLoans.Add(loans);
+                }
+                else if (loans.EntityState == EntityState.Deleted)
+                {
+                    _dataContext.BookLoans.Remove(loans);
+                }
+            }
         }
     }
 

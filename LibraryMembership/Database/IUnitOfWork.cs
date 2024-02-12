@@ -1,7 +1,6 @@
-using LibraryMembership.Database;
 using System.Threading.Tasks;
 
-namespace LibraryMembership.Services;
+namespace LibraryMembership.Database;
 
 public interface IUnitOfWork
 {

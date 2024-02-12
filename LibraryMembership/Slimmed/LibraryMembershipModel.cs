@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace LibraryMembership.Slimmed;
 
@@ -11,14 +13,18 @@ public class LibraryMembershipModel
     public List<BookReservationModel> BookReservations { get; set; }
     public List<FineModel> Fines { get; set; }
     public DateTimeOffset MembershipExpiry { get; set; }
+    
+    public EntityState EntityState { get; set; }
 }
 
 public class BookLoanModel
 {
     public Guid LoanId { get; private set; }
     public Guid BookId { get; private set; }
+    public Guid MembershipId { get; private set; }
     public DateTimeOffset DueDate { get; private set; }
     public bool ExtensionApplied { get; private set; }
+    public EntityState EntityState { get; set; } = EntityState.Unchanged;
 
     public BookLoanModel(Guid loanId, Guid bookId, DateTimeOffset dueDate)
     {
@@ -26,6 +32,7 @@ public class BookLoanModel
         BookId = bookId;
         DueDate = dueDate;
         ExtensionApplied = false;
+        EntityState = EntityState.Added;
     }
 
     public bool IsOverdue(DateTimeOffset now)
@@ -45,6 +52,7 @@ public class BookReservationModel
     public Guid ReservationId { get; private set; }
     public Guid BookId { get; private set; }
     public DateTime ReservationDate { get; private set; }
+    public Guid MembershipId { get; private set; }
 
     public BookReservationModel(Guid reservationId, Guid bookId, DateTime reservationDate)
     {
@@ -59,6 +67,7 @@ public class FineModel
     public Guid FineId { get; private set; }
     public decimal Amount { get; private set; }
     public bool IsPaid { get; private set; }
+    public Guid MembershipId { get; private set; }
 
     public FineModel(Guid fineId, decimal amount)
     {

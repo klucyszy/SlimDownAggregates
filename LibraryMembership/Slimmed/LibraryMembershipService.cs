@@ -2,6 +2,7 @@ using LibraryMembership.Database.Repositories;
 using LibraryMembership.Slimmed;
 using System;
 using System.Threading.Tasks;
+using LibraryMembership.Database;
 
 namespace LibraryMembership.Services;
 
@@ -40,7 +41,7 @@ public sealed class LibraryMembershipService : ILibraryMembershipService
         activeMembership.AddLoan(new BookLoanModel(
             Guid.NewGuid(),
             bookId,
-            DateTimeOffset.Now));
+            DateTimeOffset.Now.AddDays(30)));
         
         _libraryMembershipRepository.UpdateAsync(activeMembership);
         
