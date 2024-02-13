@@ -35,13 +35,17 @@ public sealed class LibraryMembershipService : ILibraryMembershipService
         
         if (aggregate is not LibraryMembershipAggregate.Active activeMembership)
         {
+            // Persist aggregate state if it was changed
+            _libraryMembershipRepository.UpdateAsync(aggregate);
+            await _unitOfWork.SaveChangesAsync();
+            
             return Result.Failure("Membership is not active");
         }
 
         activeMembership.LoanBook(new BookLoanModel(
             Guid.NewGuid(),
             bookId,
-            DateTimeOffset.Now.AddDays(30)));
+            DateTimeOffset.Now.AddDays(-1)));
         
         _libraryMembershipRepository.UpdateAsync(activeMembership);
         
