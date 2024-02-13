@@ -1,14 +1,16 @@
 using System;
 using System.Linq;
+using LibraryMembership.Database;
 
 namespace LibraryMembership.Slimmed;
 
 public static class LibraryMembershipFactory
 {
     public static LibraryMembershipAggregate ToAggregate(this LibraryMembershipModel model,
-        DateTimeOffset now)
+        DateTimeOffset now, DataContext _context)
     {
         return LibraryMembershipAggregate.Create(
+            _context,
             model.MembershipId,
             model.BookLoans,
             model.BookReservations,

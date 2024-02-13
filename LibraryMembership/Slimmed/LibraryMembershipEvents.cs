@@ -4,7 +4,7 @@ namespace LibraryMembership.Slimmed;
 
 public abstract record LibraryMembershipEvent
 {
-    public record LoanAdded(
+    public record BookLoaned(
         Guid MembershipId,
         Guid LoanId,
         Guid BookId,

@@ -19,7 +19,7 @@ public class LibraryMembershipFactoryTests
         
         // Act
         LibraryMembershipAggregate aggregate = model
-            .ToAggregate(DateTimeOffset.UtcNow);
+            .ToAggregate(DateTimeOffset.UtcNow, null);
         
         // Assert
         aggregate.Should().BeOfType<LibraryMembershipAggregate.Active>();
@@ -39,7 +39,7 @@ public class LibraryMembershipFactoryTests
         
         // Act
         LibraryMembershipAggregate aggregate = model
-            .ToAggregate(DateTimeOffset.UtcNow);
+            .ToAggregate(DateTimeOffset.UtcNow, null);
         
         // Assert
         aggregate.Should().BeOfType<LibraryMembershipAggregate.Expired>();
@@ -61,7 +61,7 @@ public class LibraryMembershipFactoryTests
         
         // Act
         LibraryMembershipAggregate aggregate = model
-            .ToAggregate(DateTimeOffset.UtcNow);
+            .ToAggregate(DateTimeOffset.UtcNow, null);
         
         // Assert
         aggregate.Should().BeOfType<LibraryMembershipAggregate.Suspended>();
@@ -84,7 +84,7 @@ public class LibraryMembershipFactoryTests
         
         // Act
         LibraryMembershipAggregate aggregate = model
-            .ToAggregate(DateTimeOffset.UtcNow);
+            .ToAggregate(DateTimeOffset.UtcNow, null);
         
         // Assert
         aggregate.Should().BeOfType<LibraryMembershipAggregate.Suspended>();

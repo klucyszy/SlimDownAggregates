@@ -24,7 +24,6 @@ public class BookLoanModel
     public Guid MembershipId { get; private set; }
     public DateTimeOffset DueDate { get; private set; }
     public bool ExtensionApplied { get; private set; }
-    public EntityState EntityState { get; set; } = EntityState.Unchanged;
 
     public BookLoanModel(Guid loanId, Guid bookId, DateTimeOffset dueDate)
     {
@@ -32,7 +31,6 @@ public class BookLoanModel
         BookId = bookId;
         DueDate = dueDate;
         ExtensionApplied = false;
-        EntityState = EntityState.Added;
     }
 
     public bool IsOverdue(DateTimeOffset now)

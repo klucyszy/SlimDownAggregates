@@ -38,7 +38,7 @@ public sealed class LibraryMembershipService : ILibraryMembershipService
             return Result.Failure("Membership is not active");
         }
 
-        activeMembership.AddLoan(new BookLoanModel(
+        activeMembership.LoanBook(new BookLoanModel(
             Guid.NewGuid(),
             bookId,
             DateTimeOffset.Now.AddDays(30)));

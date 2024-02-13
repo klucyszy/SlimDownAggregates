@@ -20,7 +20,7 @@ public sealed class LibraryMembershipRepository
     {
         return await GetModel()
             .Where(x => x.MembershipId == membershipId)
-            .Select(x => x.ToAggregate(DateTimeOffset.Now))
+            .Select(x => x.ToAggregate(DateTimeOffset.Now, _dataContext))
             .FirstOrDefaultAsync();
     }
     
@@ -31,21 +31,7 @@ public sealed class LibraryMembershipRepository
         
         if (model is not null)
         {
-            aggregate.ToModel(model);
-            
-            _dataContext.LibraryMemberships.Update(model);
-
-            foreach (BookLoanModel loans in model.BookLoans)
-            {
-                if (loans.EntityState == EntityState.Added)
-                {
-                    _dataContext.BookLoans.Add(loans);
-                }
-                else if (loans.EntityState == EntityState.Deleted)
-                {
-                    _dataContext.BookLoans.Remove(loans);
-                }
-            }
+            _dataContext.LibraryMemberships.Update(aggregate.ToModel(model));
         }
     }
 
