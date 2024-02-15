@@ -16,8 +16,8 @@ public class LibraryMembershipEntity
     public Guid Id { get; set; }
     public MembershipStatus Status { get; set; }
     public List<BookLoanEntity> BookLoans { get; set; } = [];
-    public IList<BookReservationEntity> BookReservations { get; set; } = new List<BookReservationEntity>();
-    public IList<FineEntity> Fines { get; set; } = new List<FineEntity>();
+    public List<BookReservationEntity> BookReservations { get; set; } = [];
+    public List<FineEntity> Fines { get; set; } = [];
     public DateTimeOffset MembershipExpiry { get; set; }
     
     public EntityState EntityState { get; set; }

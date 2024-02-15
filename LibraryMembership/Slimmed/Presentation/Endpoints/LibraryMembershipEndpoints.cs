@@ -20,4 +20,18 @@ public static class LibraryMembershipEndpoints
             async (Guid id, Guid bookId, ILibraryMembershipService service, CancellationToken ct)
                 => await service.ReturnBookAsync(id, bookId, ct));
     }
+    
+    public static void MapReserveBookEndpoint(this WebApplication app)
+    {
+        app.MapPost("api/library-membership/{id:guid}/operation/reserve/{bookId:guid}", 
+            async (Guid id, Guid bookId, ILibraryMembershipService service, CancellationToken ct)
+                => await service.ReserveBookAsync(id, bookId, ct));
+    }
+    
+    public static void MapCancelBookReservationEndpoint(this WebApplication app)
+    {
+        app.MapPost("api/library-membership/{id:guid}/operation/cancel-reservation/{bookId:guid}", 
+            async (Guid id, Guid bookId, ILibraryMembershipService service, CancellationToken ct)
+                => await service.CancelBookReservationAsync(id, bookId, ct));
+    }
 }

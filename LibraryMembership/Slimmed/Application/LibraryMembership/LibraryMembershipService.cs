@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using LibraryMembership.Shared;
 using LibraryMembership.Slimmed.Domain.LibraryMembership;
 using LibraryMembership.Slimmed.Domain.LibraryMembership.Abstractions;
+using LibraryMembership.Slimmed.Infrastructure.Persistence.Entities;
 
 namespace LibraryMembership.Slimmed.Application.LibraryMembership;
 
@@ -11,6 +12,8 @@ public interface ILibraryMembershipService
 {
     Task<Result> LoanBookAsync(Guid membershipId, Guid bookId, CancellationToken ct);
     Task<Result> ReturnBookAsync(Guid membershipId, Guid bookId, CancellationToken ct);
+    Task<Result> ReserveBookAsync(Guid membershipId, Guid bookId, CancellationToken ct);
+    Task<Result> CancelBookReservationAsync(Guid membershipId, Guid bookId, CancellationToken ct);
 }
 
 public sealed class LibraryMembershipService : ILibraryMembershipService
@@ -63,6 +66,60 @@ public sealed class LibraryMembershipService : ILibraryMembershipService
         aggregate.ReturnBook(bookId);
         
         await _libraryMembershipRepository.UpdateAsync(aggregate, ct);
+        
+        return Result.Success();
+    }
+
+    public async Task<Result> ReserveBookAsync(Guid membershipId, Guid bookId, CancellationToken ct)
+    {
+        LibraryMembershipAggregate? aggregate = await _libraryMembershipRepository
+            .GetAggregateAsync(membershipId, ct);
+        
+        if (aggregate is null)
+        {
+            return Result.Failure("Membership not found");
+        }
+        
+        if (aggregate is not LibraryMembershipAggregate.Active activeMembership)
+        {
+            // Persist aggregate state if it was changed
+            await _libraryMembershipRepository.UpdateAsync(aggregate, ct);
+            
+            return Result.Failure("Membership is not active");
+        }
+
+        activeMembership.ReserveBook(new BookReservationEntity(
+            Guid.NewGuid(),
+            bookId,
+            membershipId,
+            DateTimeOffset.Now));
+        
+        await _libraryMembershipRepository.UpdateAsync(activeMembership, ct);
+        
+        return Result.Success();
+    }
+
+    public async Task<Result> CancelBookReservationAsync(Guid membershipId, Guid bookId, CancellationToken ct)
+    {
+        LibraryMembershipAggregate? aggregate = await _libraryMembershipRepository
+            .GetAggregateAsync(membershipId, ct);
+        
+        if (aggregate is null)
+        {
+            return Result.Failure("Membership not found");
+        }
+        
+        if (aggregate is not LibraryMembershipAggregate.Active activeMembership)
+        {
+            // Persist aggregate state if it was changed
+            await _libraryMembershipRepository.UpdateAsync(aggregate, ct);
+            
+            return Result.Failure("Membership is not active");
+        }
+
+        activeMembership.CancelReservation(bookId);
+        
+        await _libraryMembershipRepository.UpdateAsync(activeMembership, ct);
         
         return Result.Success();
     }

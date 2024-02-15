@@ -21,5 +21,7 @@ WebApplication app = builder.Build();
 
 app.MapLoanBookEndpoint();
 app.MapReturnBookEndpoint();
+app.MapReserveBookEndpoint();
+app.MapCancelBookReservationEndpoint();
 
 app.Run();

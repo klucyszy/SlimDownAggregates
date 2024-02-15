@@ -73,7 +73,7 @@ public abstract class LibraryMembershipAggregate
             loan.ApplyExtension(now);
         }
 
-        public void AddReservation(BookReservationEntity reservationEntity)
+        public void ReserveBook(BookReservationEntity reservationEntity)
         {
             if (_bookReservations.Any(x => x.BookId == reservationEntity.BookId))
             {
@@ -83,10 +83,10 @@ public abstract class LibraryMembershipAggregate
             _bookReservations.Add(reservationEntity);
         }
 
-        public void CancelReservation(Guid reservationId)
+        public void CancelReservation(Guid bookId)
         {
             BookReservationEntity? reservation = _bookReservations
-                .FirstOrDefault(r => r.Id == reservationId);
+                .FirstOrDefault(r => r.BookId == bookId);
             if (reservation is null)
             {
                 return;

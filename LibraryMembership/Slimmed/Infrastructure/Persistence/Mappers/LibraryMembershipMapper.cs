@@ -33,15 +33,16 @@ public static class LibraryMembershipMapper
             LibraryMembershipAggregate.Expired => LibraryMembershipEntity.MembershipStatus.Expired,
             _ => throw new InvalidOperationException("Invalid membership status")
         };
-        
         entity.BookLoans.Update(
             aggregate.BookLoans.ToList(),
-            (a, b) => a.BookId == b.BookId,
-            a => new BookLoanEntity(a.Id, a.BookId, entity.Id, a.DueDate),
-            _context
-        );
-        
-        entity.BookReservations = aggregate.BookReservations.ToList();
+            (entity, aggregate) => entity.BookId == aggregate.BookId,
+            aggregate => new BookLoanEntity(aggregate.Id, aggregate.BookId, entity.Id, aggregate.DueDate),
+            _context);
+        entity.BookReservations.Update(
+            aggregate.BookReservations.ToList(),
+            (entity, aggregate) => entity.BookId == aggregate.BookId,
+            aggregate => new BookReservationEntity(aggregate.Id, aggregate.BookId, entity.Id, aggregate.ReservationDate),
+            _context);
         entity.Fines = aggregate.Fines.ToList();
 
         return entity;
