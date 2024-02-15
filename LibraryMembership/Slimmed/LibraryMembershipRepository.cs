@@ -1,10 +1,12 @@
-using LibraryMembership.Slimmed;
-using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using LibraryMembership.Slimmed.Domain.LibraryMembership;
+using LibraryMembership.Slimmed.Infrastructure.Persistence;
+using LibraryMembership.Slimmed.Infrastructure.Persistence.Entities;
+using Microsoft.EntityFrameworkCore;
 
-namespace LibraryMembership.Database.Repositories;
+namespace LibraryMembership.Slimmed;
 
 public sealed class LibraryMembershipRepository
 {
@@ -19,23 +21,23 @@ public sealed class LibraryMembershipRepository
     public async Task<LibraryMembershipAggregate?> GetAggregateAsync(Guid membershipId)
     {
         return await GetModel()
-            .Where(x => x.MembershipId == membershipId)
+            .Where(x => x.Id == membershipId)
             .Select(x => x.ToAggregate(DateTimeOffset.Now, _dataContext))
             .FirstOrDefaultAsync();
     }
     
     public async Task UpdateAsync(LibraryMembershipAggregate aggregate)
     {
-        LibraryMembershipModel? model = await _dataContext.LibraryMemberships
+        LibraryMembershipEntity? model = await _dataContext.LibraryMemberships
             .FindAsync(aggregate.Id);
         
-        if (model is not null)
-        {
-            _dataContext.LibraryMemberships.Update(aggregate.ToModel(model));
-        }
+        
+        model?.ToModel(aggregate, _dataContext);
+        
+        _dataContext.SaveChangesAsync();
     }
 
-    private IQueryable<LibraryMembershipModel> GetModel()
+    private IQueryable<LibraryMembershipEntity> GetModel()
     {
         return _dataContext.LibraryMemberships
             .Include(x => x.BookLoans)

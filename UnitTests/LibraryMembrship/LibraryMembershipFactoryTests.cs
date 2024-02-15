@@ -1,7 +1,9 @@
 using FluentAssertions;
 using LibraryMembership.Slimmed;
+using LibraryMembership.Slimmed.Domain.LibraryMembership;
+using LibraryMembership.Slimmed.Infrastructure.Persistence.Entities;
 
-namespace UnitTests;
+namespace UnitTests.LibraryMembrship;
 
 public class LibraryMembershipFactoryTests
 {
@@ -9,7 +11,7 @@ public class LibraryMembershipFactoryTests
     public void ToAggregate_Creates_ActiveAggregateState()
     {
         // Arrange
-        LibraryMembershipModel model = new()
+        LibraryMembershipEntity entity = new()
         {
             BookLoans = [],
             BookReservations = [],
@@ -18,7 +20,7 @@ public class LibraryMembershipFactoryTests
         };
         
         // Act
-        LibraryMembershipAggregate aggregate = model
+        LibraryMembershipAggregate aggregate = entity
             .ToAggregate(DateTimeOffset.UtcNow, null);
         
         // Assert
@@ -29,7 +31,7 @@ public class LibraryMembershipFactoryTests
     public void ToAggregate_Creates_ExpiredAggregateState()
     {
         // Arrange
-        LibraryMembershipModel model = new()
+        LibraryMembershipEntity entity = new()
         {
             BookLoans = [],
             BookReservations = [],
@@ -38,7 +40,7 @@ public class LibraryMembershipFactoryTests
         };
         
         // Act
-        LibraryMembershipAggregate aggregate = model
+        LibraryMembershipAggregate aggregate = entity
             .ToAggregate(DateTimeOffset.UtcNow, null);
         
         // Assert
@@ -49,18 +51,18 @@ public class LibraryMembershipFactoryTests
     public void ToAggregate_Creates_SuspendedAggregateState_WhenFineIsUnpaid()
     {
         // Arrange
-        LibraryMembershipModel model = new()
+        LibraryMembershipEntity entity = new()
         {
             BookLoans = [],
             BookReservations = [],
             Fines = [
-                new FineModel(Guid.NewGuid(), 10)
+                new FineEntity(Guid.NewGuid(), 10)
             ],
             MembershipExpiry = DateTimeOffset.UtcNow.AddYears(1)
         };
         
         // Act
-        LibraryMembershipAggregate aggregate = model
+        LibraryMembershipAggregate aggregate = entity
             .ToAggregate(DateTimeOffset.UtcNow, null);
         
         // Assert
@@ -71,10 +73,10 @@ public class LibraryMembershipFactoryTests
     public void ToAggregate_Creates_SuspendedAggregateState_WhenBookLoanIsOverdue()
     {
         // Arrange
-        LibraryMembershipModel model = new()
+        LibraryMembershipEntity entity = new()
         {
             BookLoans = [
-                new BookLoanModel(Guid.NewGuid(), Guid.NewGuid(), DateTimeOffset.UtcNow.AddDays(-1))
+                new BookLoanEntity(Guid.NewGuid(), Guid.NewGuid(), DateTimeOffset.UtcNow.AddDays(-1))
             ],
             BookReservations = [],
             Fines = [],
@@ -83,7 +85,7 @@ public class LibraryMembershipFactoryTests
         };
         
         // Act
-        LibraryMembershipAggregate aggregate = model
+        LibraryMembershipAggregate aggregate = entity
             .ToAggregate(DateTimeOffset.UtcNow, null);
         
         // Assert

@@ -1,0 +1,12 @@
+@baseUrl = http://localhost:5285/
+
+@membershipId = 66fdfb6a-bcb9-49e2-86be-19816695051e
+@bookId = 16fdfb6a-bcb9-49e2-86be-19816695051e
+
+### Loan book
+
+POST {{baseUrl}}/api/library-membership/{{membershipId}}/operation/loan/{{bookId}}
+
+### Return book
+
+POST {{baseUrl}}/api/library-membership/{{membershipId}}/operation/return/{{bookId}}

@@ -1,4 +1,4 @@
-namespace UnitTests;
+namespace UnitTests.LibraryMembrship;
 
 public class LibraryMembershipAggregateTests
 {

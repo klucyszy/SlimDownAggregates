@@ -1,11 +1,10 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using LibraryMembership.Slimmed;
+using LibraryMembership.Slimmed.Infrastructure.Persistence.Entities;
 using Microsoft.EntityFrameworkCore;
 
-namespace LibraryMembership.Database;
+namespace LibraryMembership.Slimmed.Infrastructure.Persistence;
 
 public class DataContext : DbContext
 {
@@ -14,10 +13,10 @@ public class DataContext : DbContext
         SeedData();
     }
 
-    public DbSet<LibraryMembershipModel> LibraryMemberships { get; set; }
-    public DbSet<BookLoanModel> BookLoans { get; set; }
-    public DbSet<FineModel> Fines { get; set; }
-    public DbSet<BookReservationModel> BookReservations { get; set; }
+    public DbSet<LibraryMembershipEntity> LibraryMemberships { get; set; }
+    public DbSet<BookLoanEntity> BookLoans { get; set; }
+    public DbSet<FineEntity> Fines { get; set; }
+    public DbSet<BookReservationEntity> BookReservations { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -33,9 +32,9 @@ public class DataContext : DbContext
             return;
         }
         
-        LibraryMemberships.Add(new LibraryMembershipModel
+        LibraryMemberships.Add(new LibraryMembershipEntity
         {
-            MembershipId = Guid.Parse("66fdfb6a-bcb9-49e2-86be-19816695051e"),
+            Id = Guid.Parse("66fdfb6a-bcb9-49e2-86be-19816695051e"),
             Status = MembershipStatus.Active,
             MembershipExpiry = DateTimeOffset.Now.AddYears(1)
         });

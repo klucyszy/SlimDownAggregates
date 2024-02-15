@@ -1,29 +1,26 @@
-using LibraryMembership.Database.Repositories;
-using LibraryMembership.Slimmed;
 using System;
 using System.Threading.Tasks;
-using LibraryMembership.Database;
+using LibraryMembership.Shared;
+using LibraryMembership.Slimmed.Domain.LibraryMembership;
 
-namespace LibraryMembership.Services;
+namespace LibraryMembership.Slimmed;
 
 public interface ILibraryMembershipService
 {
-    Task<Result> AddLoanAsync(Guid membershipId, Guid bookId);
+    Task<Result> LoanBookAsync(Guid membershipId, Guid bookId);
+    Task<Result> ReturnBookAsync(Guid membershipId, Guid bookId);
 }
 
 public sealed class LibraryMembershipService : ILibraryMembershipService
 {
     private readonly LibraryMembershipRepository _libraryMembershipRepository;
-    private readonly IUnitOfWork _unitOfWork;
 
-    public LibraryMembershipService(LibraryMembershipRepository libraryMembershipRepository,
-        IUnitOfWork unitOfWork)
+    public LibraryMembershipService(LibraryMembershipRepository libraryMembershipRepository)
     {
         _libraryMembershipRepository = libraryMembershipRepository;
-        _unitOfWork = unitOfWork;
     }
 
-    public async Task<Result> AddLoanAsync(Guid membershipId, Guid bookId)
+    public async Task<Result> LoanBookAsync(Guid membershipId, Guid bookId)
     {
         LibraryMembershipAggregate? aggregate = await _libraryMembershipRepository
             .GetAggregateAsync(membershipId);
@@ -37,19 +34,33 @@ public sealed class LibraryMembershipService : ILibraryMembershipService
         {
             // Persist aggregate state if it was changed
             _libraryMembershipRepository.UpdateAsync(aggregate);
-            await _unitOfWork.SaveChangesAsync();
             
             return Result.Failure("Membership is not active");
         }
 
-        activeMembership.LoanBook(new BookLoanModel(
+        activeMembership.LoanBook(new BookLoan(
             Guid.NewGuid(),
             bookId,
-            DateTimeOffset.Now.AddDays(-1)));
+            DateTimeOffset.Now.AddDays(30)));
         
         _libraryMembershipRepository.UpdateAsync(activeMembership);
         
-        await _unitOfWork.SaveChangesAsync();
+        return Result.Success();
+    }
+
+    public async Task<Result> ReturnBookAsync(Guid membershipId, Guid bookId)
+    {
+        LibraryMembershipAggregate? aggregate = await _libraryMembershipRepository
+            .GetAggregateAsync(membershipId);
+        
+        if (aggregate is null)
+        {
+            return Result.Failure("Membership not found");
+        }
+        
+        aggregate.ReturnBook(bookId);
+        
+        _libraryMembershipRepository.UpdateAsync(aggregate);
         
         return Result.Success();
     }

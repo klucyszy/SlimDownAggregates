@@ -1,8 +1,0 @@
-@baseUrl = http://localhost:5285/
-
-### Add Loan
-
-@membershipId = 66fdfb6a-bcb9-49e2-86be-19816695051e
-@bookId = 66fdfb6a-bcb9-49e2-86be-19816695051e
-
-POST {{baseUrl}}/api/library-membership/{{membershipId}}/operation/loan/{{bookId}}

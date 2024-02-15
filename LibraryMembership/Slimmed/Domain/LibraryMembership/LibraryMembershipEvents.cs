@@ -1,6 +1,6 @@
 using System;
 
-namespace LibraryMembership.Slimmed;
+namespace LibraryMembership.Slimmed.Domain.LibraryMembership;
 
 public abstract record LibraryMembershipEvent
 {

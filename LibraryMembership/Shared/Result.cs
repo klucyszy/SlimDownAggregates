@@ -1,4 +1,4 @@
-namespace LibraryMembership.Services;
+namespace LibraryMembership.Shared;
 
 public sealed record Result
 {
