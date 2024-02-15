@@ -1,12 +1,14 @@
 using System;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using LibraryMembership.Slimmed.Domain.LibraryMembership;
-using LibraryMembership.Slimmed.Infrastructure.Persistence;
+using LibraryMembership.Slimmed.Domain.LibraryMembership.Abstractions;
 using LibraryMembership.Slimmed.Infrastructure.Persistence.Entities;
+using LibraryMembership.Slimmed.Infrastructure.Persistence.Mappers;
 using Microsoft.EntityFrameworkCore;
 
-namespace LibraryMembership.Slimmed;
+namespace LibraryMembership.Slimmed.Infrastructure.Persistence.Repositories;
 
 public sealed class LibraryMembershipRepository : ILibraryMembershipRepository
 {
@@ -18,7 +20,7 @@ public sealed class LibraryMembershipRepository : ILibraryMembershipRepository
         _dataContext = dataContext;
     }
     
-    public async Task<LibraryMembershipAggregate?> GetAggregateAsync(Guid membershipId)
+    public async Task<LibraryMembershipAggregate?> GetAggregateAsync(Guid membershipId, CancellationToken ct)
     {
         return await GetModel()
             .Where(x => x.Id == membershipId)
@@ -26,15 +28,14 @@ public sealed class LibraryMembershipRepository : ILibraryMembershipRepository
             .FirstOrDefaultAsync();
     }
     
-    public async Task UpdateAsync(LibraryMembershipAggregate aggregate)
+    public async Task UpdateAsync(LibraryMembershipAggregate aggregate, CancellationToken ct)
     {
         LibraryMembershipEntity? model = await _dataContext.LibraryMemberships
             .FindAsync(aggregate.Id);
         
+        aggregate?.ToEntity(model, _dataContext);
         
-        model?.ToModel(aggregate, _dataContext);
-        
-        _dataContext.SaveChangesAsync();
+        await _dataContext.SaveChangesAsync(ct);
     }
 
     private IQueryable<LibraryMembershipEntity> GetModel()

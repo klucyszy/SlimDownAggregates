@@ -1,2 +1,2 @@
-namespace LibraryMembership.Slimmed;
+namespace LibraryMembership.Slimmed.Infrastructure.Persistence.Entities;
 

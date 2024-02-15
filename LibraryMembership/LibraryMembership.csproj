@@ -12,7 +12,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Slimmed\Application\LibraryMembership\" />
       <Folder Include="Slimmed\Presentation\" />
     </ItemGroup>
 

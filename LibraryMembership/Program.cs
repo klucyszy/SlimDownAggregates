@@ -1,5 +1,8 @@
 using LibraryMembership.Slimmed;
+using LibraryMembership.Slimmed.Application.LibraryMembership;
+using LibraryMembership.Slimmed.Domain.LibraryMembership.Abstractions;
 using LibraryMembership.Slimmed.Infrastructure.Persistence;
+using LibraryMembership.Slimmed.Infrastructure.Persistence.Repositories;
 using LibraryMembership.Slimmed.Presentation.Endpoints;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;

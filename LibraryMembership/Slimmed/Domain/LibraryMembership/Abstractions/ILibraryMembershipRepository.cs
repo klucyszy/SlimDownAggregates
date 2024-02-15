@@ -1,11 +1,11 @@
 using System;
+using System.Threading;
 using System.Threading.Tasks;
-using LibraryMembership.Slimmed.Domain.LibraryMembership;
 
-namespace LibraryMembership.Slimmed;
+namespace LibraryMembership.Slimmed.Domain.LibraryMembership.Abstractions;
 
 public interface ILibraryMembershipRepository
 {
-    Task<LibraryMembershipAggregate?> GetAggregateAsync(Guid membershipId);
-    Task UpdateAsync(LibraryMembershipAggregate aggregate);
+    Task<LibraryMembershipAggregate?> GetAggregateAsync(Guid membershipId, CancellationToken ct);
+    Task UpdateAsync(LibraryMembershipAggregate aggregate, CancellationToken ct);
 }

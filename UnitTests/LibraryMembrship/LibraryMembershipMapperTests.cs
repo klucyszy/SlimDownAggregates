@@ -2,10 +2,11 @@ using FluentAssertions;
 using LibraryMembership.Slimmed;
 using LibraryMembership.Slimmed.Domain.LibraryMembership;
 using LibraryMembership.Slimmed.Infrastructure.Persistence.Entities;
+using LibraryMembership.Slimmed.Infrastructure.Persistence.Mappers;
 
 namespace UnitTests.LibraryMembrship;
 
-public class LibraryMembershipFactoryTests
+public class LibraryMembershipMapperTests
 {
     [Fact]
     public void ToAggregate_Creates_ActiveAggregateState()

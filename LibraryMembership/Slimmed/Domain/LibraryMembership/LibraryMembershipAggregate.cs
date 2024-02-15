@@ -18,18 +18,7 @@ public abstract class LibraryMembershipAggregate
     public IReadOnlyList<BookLoan> BookLoans => _bookLoans;
     public IReadOnlyList<BookReservationEntity> BookReservations => _bookReservations;
     public IReadOnlyList<FineEntity> Fines => _fines;
-
-    public virtual void ReturnBook(Guid bookId)
-    {
-        BookLoan? loan = _bookLoans.FirstOrDefault(l => l.BookId == bookId);
-        if (loan is null)
-        {
-            return;
-        }
-
-        _bookLoans.Remove(loan);
-    }
-
+    
     private LibraryMembershipAggregate(DataContext context, Guid membershipId, List<BookLoan> bookLoans,
         List<BookReservationEntity> bookReservations, List<FineEntity> fines)
     {
@@ -157,6 +146,17 @@ public abstract class LibraryMembershipAggregate
         public void RenewMembership()
         {
         }
+    }
+    
+    public void ReturnBook(Guid bookId)
+    {
+        BookLoan? loan = _bookLoans.FirstOrDefault(l => l.BookId == bookId);
+        if (loan is null)
+        {
+            return;
+        }
+
+        _bookLoans.Remove(loan);
     }
 
     public static LibraryMembershipAggregate Create(DataContext context, Guid membershipId, List<BookLoan> bookLoans,
