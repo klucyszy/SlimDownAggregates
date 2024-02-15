@@ -35,7 +35,7 @@ public class DataContext : DbContext
         LibraryMemberships.Add(new LibraryMembershipEntity
         {
             Id = Guid.Parse("66fdfb6a-bcb9-49e2-86be-19816695051e"),
-            Status = MembershipStatus.Active,
+            Status = LibraryMembershipEntity.MembershipStatus.Active,
             MembershipExpiry = DateTimeOffset.Now.AddYears(1)
         });
 

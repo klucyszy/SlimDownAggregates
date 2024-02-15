@@ -76,12 +76,12 @@ public class LibraryMembershipFactoryTests
         LibraryMembershipEntity entity = new()
         {
             BookLoans = [
-                new BookLoanEntity(Guid.NewGuid(), Guid.NewGuid(), DateTimeOffset.UtcNow.AddDays(-1))
+                new BookLoanEntity(Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid(), DateTimeOffset.UtcNow.AddDays(-1))
             ],
             BookReservations = [],
             Fines = [],
             MembershipExpiry = DateTimeOffset.UtcNow.AddYears(1),
-            Status = MembershipStatus.Active
+            Status = LibraryMembershipEntity.MembershipStatus.Active
         };
         
         // Act

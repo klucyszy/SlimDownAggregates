@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace LibraryMembership.Slimmed;
 
-public sealed class LibraryMembershipRepository
+public sealed class LibraryMembershipRepository : ILibraryMembershipRepository
 {
     private readonly DataContext _dataContext;
 

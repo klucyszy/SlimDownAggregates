@@ -30,9 +30,9 @@ public static class LibraryMembershipFactory
     {
         entity.Status = aggregate switch
         {
-            LibraryMembershipAggregate.Active => MembershipStatus.Active,
-            LibraryMembershipAggregate.Suspended => MembershipStatus.Suspended,
-            LibraryMembershipAggregate.Expired => MembershipStatus.Expired,
+            LibraryMembershipAggregate.Active => LibraryMembershipEntity.MembershipStatus.Active,
+            LibraryMembershipAggregate.Suspended => LibraryMembershipEntity.MembershipStatus.Suspended,
+            LibraryMembershipAggregate.Expired => LibraryMembershipEntity.MembershipStatus.Expired,
             _ => throw new InvalidOperationException("Invalid membership status")
         };
         

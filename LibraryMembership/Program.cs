@@ -9,10 +9,10 @@ WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddDbContext<DataContext>(opts =>
 {
-    opts.UseInMemoryDatabase("SlidDownAggregates");
+    opts.UseInMemoryDatabase("SlimDownAggregates");
 });
 
-builder.Services.AddScoped<LibraryMembershipRepository>();
+builder.Services.AddScoped<ILibraryMembershipRepository, LibraryMembershipRepository>();
 builder.Services.AddScoped<ILibraryMembershipService, LibraryMembershipService>();
 
 WebApplication app = builder.Build();

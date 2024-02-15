@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using LibraryMembership.Original;
 using LibraryMembership.Slimmed.Infrastructure.Persistence;
 using LibraryMembership.Slimmed.Infrastructure.Persistence.Entities;
 
