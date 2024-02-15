@@ -6,9 +6,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace LibraryMembership.Slimmed.Infrastructure.Persistence;
 
-public class DataContext : DbContext
+public class LibraryMembershipContext : DbContext
 {
-    public DataContext(DbContextOptions<DataContext> options) : base(options)
+    public LibraryMembershipContext(DbContextOptions<LibraryMembershipContext> options) : base(options)
     {
         SeedData();
     }

@@ -19,7 +19,7 @@ public abstract class LibraryMembershipAggregate
     public IReadOnlyList<BookReservationEntity> BookReservations => _bookReservations;
     public IReadOnlyList<FineEntity> Fines => _fines;
     
-    private LibraryMembershipAggregate(DataContext context, Guid membershipId, List<BookLoan> bookLoans,
+    private LibraryMembershipAggregate(LibraryMembershipContext context, Guid membershipId, List<BookLoan> bookLoans,
         List<BookReservationEntity> bookReservations, List<FineEntity> fines)
     {
         _membershipId = membershipId;
@@ -30,7 +30,7 @@ public abstract class LibraryMembershipAggregate
 
     public sealed class Active : LibraryMembershipAggregate
     {
-        public Active(DataContext context, Guid membershipId, List<BookLoan> bookLoans, List<BookReservationEntity> bookReservations, List<FineEntity> fines)
+        public Active(LibraryMembershipContext context, Guid membershipId, List<BookLoan> bookLoans, List<BookReservationEntity> bookReservations, List<FineEntity> fines)
             : base(context, membershipId, bookLoans, bookReservations, fines)
         {
         }
@@ -98,7 +98,7 @@ public abstract class LibraryMembershipAggregate
 
     public sealed class Suspended : LibraryMembershipAggregate
     {
-        public Suspended(DataContext context, Guid membershipId, List<BookLoan> bookLoans, List<BookReservationEntity> bookReservations, List<FineEntity> fines)
+        public Suspended(LibraryMembershipContext context, Guid membershipId, List<BookLoan> bookLoans, List<BookReservationEntity> bookReservations, List<FineEntity> fines)
             : base(context, membershipId, bookLoans, bookReservations, fines)
         {
         }
@@ -122,7 +122,7 @@ public abstract class LibraryMembershipAggregate
 
     public sealed class Expired : LibraryMembershipAggregate
     {
-        public Expired(DataContext context, Guid membershipId, List<BookLoan> bookLoans, List<BookReservationEntity> bookReservations, List<FineEntity> fines)
+        public Expired(LibraryMembershipContext context, Guid membershipId, List<BookLoan> bookLoans, List<BookReservationEntity> bookReservations, List<FineEntity> fines)
             : base(context, membershipId, bookLoans, bookReservations, fines)
         {
         }
@@ -159,7 +159,7 @@ public abstract class LibraryMembershipAggregate
         _bookLoans.Remove(loan);
     }
 
-    public static LibraryMembershipAggregate Create(DataContext context, Guid membershipId, List<BookLoan> bookLoans,
+    public static LibraryMembershipAggregate Create(LibraryMembershipContext context, Guid membershipId, List<BookLoan> bookLoans,
         List<BookReservationEntity> bookReservations, List<FineEntity> fines, DateTimeOffset membershipExpiry,
         DateTimeOffset now)
     {

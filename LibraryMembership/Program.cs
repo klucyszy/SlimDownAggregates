@@ -1,4 +1,3 @@
-using LibraryMembership.Slimmed;
 using LibraryMembership.Slimmed.Application.LibraryMembership;
 using LibraryMembership.Slimmed.Domain.LibraryMembership.Abstractions;
 using LibraryMembership.Slimmed.Infrastructure.Persistence;
@@ -10,9 +9,9 @@ using Microsoft.Extensions.DependencyInjection;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddDbContext<DataContext>(opts =>
+builder.Services.AddDbContext<LibraryMembershipContext>(opts =>
 {
-    opts.UseInMemoryDatabase("SlimDownAggregates");
+    opts.UseInMemoryDatabase("LibraryMembership");
 });
 
 builder.Services.AddScoped<ILibraryMembershipRepository, LibraryMembershipRepository>();

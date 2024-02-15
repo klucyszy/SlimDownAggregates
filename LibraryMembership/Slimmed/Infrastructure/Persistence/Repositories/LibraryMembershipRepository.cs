@@ -12,35 +12,40 @@ namespace LibraryMembership.Slimmed.Infrastructure.Persistence.Repositories;
 
 public sealed class LibraryMembershipRepository : ILibraryMembershipRepository
 {
-    private readonly DataContext _dataContext;
-
+    private readonly LibraryMembershipContext _context;
+    
     public LibraryMembershipRepository(
-        DataContext dataContext)
+        LibraryMembershipContext context)
     {
-        _dataContext = dataContext;
+        _context = context;
     }
     
     public async Task<LibraryMembershipAggregate?> GetAggregateAsync(Guid membershipId, CancellationToken ct)
     {
-        return await GetModel()
+        return await LoadEntityWithIncludes()
             .Where(x => x.Id == membershipId)
-            .Select(x => x.ToAggregate(DateTimeOffset.Now, _dataContext))
-            .FirstOrDefaultAsync();
+            .Select(x => x.ToAggregate(DateTimeOffset.Now, _context))
+            .FirstOrDefaultAsync(ct);
     }
     
     public async Task UpdateAsync(LibraryMembershipAggregate aggregate, CancellationToken ct)
     {
-        LibraryMembershipEntity? model = await _dataContext.LibraryMemberships
+        LibraryMembershipEntity? model = await _context.LibraryMemberships
             .FindAsync(aggregate.Id);
+
+        if (model is null)
+        {
+            throw new InvalidOperationException("Membership not found");
+        }
         
-        aggregate?.ToEntity(model, _dataContext);
+        aggregate.ToEntity(model, _context);
         
-        await _dataContext.SaveChangesAsync(ct);
+        await _context.SaveChangesAsync(ct);
     }
 
-    private IQueryable<LibraryMembershipEntity> GetModel()
+    private IQueryable<LibraryMembershipEntity> LoadEntityWithIncludes()
     {
-        return _dataContext.LibraryMemberships
+        return _context.LibraryMemberships
             .Include(x => x.BookLoans)
             .Include(x => x.BookReservations)
             .Include(x => x.Fines);

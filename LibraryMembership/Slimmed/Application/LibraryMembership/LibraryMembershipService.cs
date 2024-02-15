@@ -3,7 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using LibraryMembership.Shared;
 using LibraryMembership.Slimmed.Domain.LibraryMembership;
-using LibraryMembership.Slimmed.Infrastructure.Persistence.Repositories;
+using LibraryMembership.Slimmed.Domain.LibraryMembership.Abstractions;
 
 namespace LibraryMembership.Slimmed.Application.LibraryMembership;
 
@@ -15,9 +15,9 @@ public interface ILibraryMembershipService
 
 public sealed class LibraryMembershipService : ILibraryMembershipService
 {
-    private readonly LibraryMembershipRepository _libraryMembershipRepository;
+    private readonly ILibraryMembershipRepository _libraryMembershipRepository;
 
-    public LibraryMembershipService(LibraryMembershipRepository libraryMembershipRepository)
+    public LibraryMembershipService(ILibraryMembershipRepository libraryMembershipRepository)
     {
         _libraryMembershipRepository = libraryMembershipRepository;
     }

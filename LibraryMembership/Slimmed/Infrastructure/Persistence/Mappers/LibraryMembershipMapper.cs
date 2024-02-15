@@ -9,7 +9,7 @@ namespace LibraryMembership.Slimmed.Infrastructure.Persistence.Mappers;
 public static class LibraryMembershipMapper
 {
     public static LibraryMembershipAggregate ToAggregate(this LibraryMembershipEntity entity,
-        DateTimeOffset now, DataContext _context)
+        DateTimeOffset now, LibraryMembershipContext _context)
     {
         return LibraryMembershipAggregate.Create(
             _context,
@@ -24,7 +24,7 @@ public static class LibraryMembershipMapper
     }
 
     public static LibraryMembershipEntity ToEntity(this LibraryMembershipAggregate aggregate,
-        LibraryMembershipEntity entity, DataContext _context)
+        LibraryMembershipEntity entity, LibraryMembershipContext _context)
     {
         entity.Status = aggregate switch
         {
@@ -36,7 +36,7 @@ public static class LibraryMembershipMapper
         
         entity.BookLoans.Update(
             aggregate.BookLoans.ToList(),
-            a => e => e.Id == a.Id,
+            (a, b) => a.BookId == b.BookId,
             a => new BookLoanEntity(a.Id, a.BookId, entity.Id, a.DueDate),
             _context
         );
