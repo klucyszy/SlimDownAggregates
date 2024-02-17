@@ -24,7 +24,7 @@ public sealed class LibraryMembershipRepository : ILibraryMembershipRepository
     {
         return await LoadEntityWithIncludes()
             .Where(x => x.Id == membershipId)
-            .Select(x => x.ToAggregate(DateTimeOffset.Now, _context))
+            .Select(x => x.ToAggregate(DateTimeOffset.Now))
             .FirstOrDefaultAsync(ct);
     }
     

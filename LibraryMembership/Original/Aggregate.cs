@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace LibraryMembership.Original;
 
-public class LibraryMembership
+file class LibraryMembership
 {
     public Guid MembershipId { get; private set; }
     public MembershipStatus Status { get; private set; }
@@ -94,7 +94,7 @@ public class LibraryMembership
     }
 }
 
-public class BookLoan
+file class BookLoan
 {
     public Guid LoanId { get; private set; }
     public Guid BookId { get; private set; }
@@ -113,7 +113,7 @@ public class BookLoan
     public bool IsOverdue => DateTime.Now > DueDate;
 }
 
-public class BookReservation
+file class BookReservation
 {
     public Guid ReservationId { get; private set; }
     public Guid BookId { get; private set; }
@@ -129,7 +129,7 @@ public class BookReservation
     // Methods related to book reservation
 }
 
-public class Fine
+file class Fine
 {
     public Guid FineId { get; private set; }
     public decimal Amount { get; private set; }
@@ -149,7 +149,7 @@ public class Fine
     }
 }
 
-public enum MembershipStatus
+file enum MembershipStatus
 {
     Active,
     Suspended,

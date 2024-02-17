@@ -3,7 +3,7 @@ using LibraryMembership.Slimmed.Domain.LibraryMembership;
 using LibraryMembership.Slimmed.Infrastructure.Persistence.Entities;
 using LibraryMembership.Slimmed.Infrastructure.Persistence.Mappers;
 
-namespace UnitTests.LibraryMembrship;
+namespace UnitTests.LibraryMembership;
 
 public class LibraryMembershipMapperTests
 {
@@ -21,7 +21,7 @@ public class LibraryMembershipMapperTests
         
         // Act
         LibraryMembershipAggregate aggregate = entity
-            .ToAggregate(DateTimeOffset.UtcNow, null);
+            .ToAggregate(DateTimeOffset.UtcNow);
         
         // Assert
         aggregate.Should().BeOfType<LibraryMembershipAggregate.Active>();
@@ -41,7 +41,7 @@ public class LibraryMembershipMapperTests
         
         // Act
         LibraryMembershipAggregate aggregate = entity
-            .ToAggregate(DateTimeOffset.UtcNow, null);
+            .ToAggregate(DateTimeOffset.UtcNow);
         
         // Assert
         aggregate.Should().BeOfType<LibraryMembershipAggregate.Expired>();
@@ -63,7 +63,7 @@ public class LibraryMembershipMapperTests
         
         // Act
         LibraryMembershipAggregate aggregate = entity
-            .ToAggregate(DateTimeOffset.UtcNow, null);
+            .ToAggregate(DateTimeOffset.UtcNow);
         
         // Assert
         aggregate.Should().BeOfType<LibraryMembershipAggregate.Suspended>();
@@ -86,7 +86,7 @@ public class LibraryMembershipMapperTests
         
         // Act
         LibraryMembershipAggregate aggregate = entity
-            .ToAggregate(DateTimeOffset.UtcNow, null);
+            .ToAggregate(DateTimeOffset.UtcNow);
         
         // Assert
         aggregate.Should().BeOfType<LibraryMembershipAggregate.Suspended>();

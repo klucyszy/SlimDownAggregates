@@ -9,10 +9,9 @@ namespace LibraryMembership.Slimmed.Infrastructure.Persistence.Mappers;
 public static class LibraryMembershipMapper
 {
     public static LibraryMembershipAggregate ToAggregate(this LibraryMembershipEntity entity,
-        DateTimeOffset now, LibraryMembershipContext _context)
+        DateTimeOffset now)
     {
         return LibraryMembershipAggregate.Create(
-            _context,
             entity.Id,
             entity.BookLoans
                 .Select(b => new BookLoan(b.Id, b.BookId, b.DueDate, b.ExtensionApplied))

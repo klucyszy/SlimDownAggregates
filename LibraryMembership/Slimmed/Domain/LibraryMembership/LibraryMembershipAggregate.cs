@@ -1,8 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using LibraryMembership.Original;
-using LibraryMembership.Slimmed.Infrastructure.Persistence;
 using LibraryMembership.Slimmed.Infrastructure.Persistence.Entities;
 
 namespace LibraryMembership.Slimmed.Domain.LibraryMembership;
@@ -19,7 +17,7 @@ public abstract class LibraryMembershipAggregate
     public IReadOnlyList<BookReservationEntity> BookReservations => _bookReservations;
     public IReadOnlyList<FineEntity> Fines => _fines;
     
-    private LibraryMembershipAggregate(LibraryMembershipContext context, Guid membershipId, List<BookLoan> bookLoans,
+    private LibraryMembershipAggregate(Guid membershipId, List<BookLoan> bookLoans,
         List<BookReservationEntity> bookReservations, List<FineEntity> fines)
     {
         _membershipId = membershipId;
@@ -30,8 +28,8 @@ public abstract class LibraryMembershipAggregate
 
     public sealed class Active : LibraryMembershipAggregate
     {
-        public Active(LibraryMembershipContext context, Guid membershipId, List<BookLoan> bookLoans, List<BookReservationEntity> bookReservations, List<FineEntity> fines)
-            : base(context, membershipId, bookLoans, bookReservations, fines)
+        public Active(Guid membershipId, List<BookLoan> bookLoans, List<BookReservationEntity> bookReservations, List<FineEntity> fines)
+            : base(membershipId, bookLoans, bookReservations, fines)
         {
         }
 
@@ -98,8 +96,8 @@ public abstract class LibraryMembershipAggregate
 
     public sealed class Suspended : LibraryMembershipAggregate
     {
-        public Suspended(LibraryMembershipContext context, Guid membershipId, List<BookLoan> bookLoans, List<BookReservationEntity> bookReservations, List<FineEntity> fines)
-            : base(context, membershipId, bookLoans, bookReservations, fines)
+        public Suspended(Guid membershipId, List<BookLoan> bookLoans, List<BookReservationEntity> bookReservations, List<FineEntity> fines)
+            : base(membershipId, bookLoans, bookReservations, fines)
         {
         }
         
@@ -122,8 +120,8 @@ public abstract class LibraryMembershipAggregate
 
     public sealed class Expired : LibraryMembershipAggregate
     {
-        public Expired(LibraryMembershipContext context, Guid membershipId, List<BookLoan> bookLoans, List<BookReservationEntity> bookReservations, List<FineEntity> fines)
-            : base(context, membershipId, bookLoans, bookReservations, fines)
+        public Expired(Guid membershipId, List<BookLoan> bookLoans, List<BookReservationEntity> bookReservations, List<FineEntity> fines)
+            : base(membershipId, bookLoans, bookReservations, fines)
         {
         }
         
@@ -159,31 +157,31 @@ public abstract class LibraryMembershipAggregate
         _bookLoans.Remove(loan);
     }
 
-    public static LibraryMembershipAggregate Create(LibraryMembershipContext context, Guid membershipId, List<BookLoan> bookLoans,
+    public static LibraryMembershipAggregate Create(Guid membershipId, List<BookLoan> bookLoans,
         List<BookReservationEntity> bookReservations, List<FineEntity> fines, DateTimeOffset membershipExpiry,
         DateTimeOffset now)
     {
-        MembershipStatus status = EvaluateMembershipStatus(bookLoans, fines, membershipExpiry, now);
+        LibraryMembershipEntity.MembershipStatus status = EvaluateMembershipStatus(bookLoans, fines, membershipExpiry, now);
         return status switch
         {
-            MembershipStatus.Active => new Active(context, membershipId, bookLoans, bookReservations, fines),
-            MembershipStatus.Suspended => new Suspended(context, membershipId, bookLoans, bookReservations, fines),
-            MembershipStatus.Expired => new Expired(context, membershipId, bookLoans, bookReservations, fines),
+            LibraryMembershipEntity.MembershipStatus.Active => new Active(membershipId, bookLoans, bookReservations, fines),
+            LibraryMembershipEntity.MembershipStatus.Suspended => new Suspended(membershipId, bookLoans, bookReservations, fines),
+            LibraryMembershipEntity.MembershipStatus.Expired => new Expired(membershipId, bookLoans, bookReservations, fines),
             _ => throw new InvalidOperationException("Invalid membership status")
         };
     }
 
-    private static MembershipStatus EvaluateMembershipStatus(List<BookLoan> bookLoans, List<FineEntity> fines,
+    private static LibraryMembershipEntity.MembershipStatus EvaluateMembershipStatus(List<BookLoan> bookLoans, List<FineEntity> fines,
         DateTimeOffset membershipExpiry, DateTimeOffset now)
     {
         if (membershipExpiry < now)
         {
-            return MembershipStatus.Expired;
+            return LibraryMembershipEntity.MembershipStatus.Expired;
         }
 
         return bookLoans.Any(l => l.IsOverdue(now)) || fines.Any(f => !f.IsPaid)
-            ? MembershipStatus.Suspended
-            : MembershipStatus.Active;
+            ? LibraryMembershipEntity.MembershipStatus.Suspended
+            : LibraryMembershipEntity.MembershipStatus.Active;
     }
 }
 
