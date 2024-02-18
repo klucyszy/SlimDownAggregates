@@ -12,10 +12,10 @@ namespace LibraryMembership.Slimmed.Infrastructure.Persistence.Repositories;
 
 public sealed class LibraryMembershipRepository : ILibraryMembershipRepository
 {
-    private readonly LibraryMembershipContext _context;
+    private readonly ILibraryMembershipContext _context;
     
     public LibraryMembershipRepository(
-        LibraryMembershipContext context)
+        ILibraryMembershipContext context)
     {
         _context = context;
     }

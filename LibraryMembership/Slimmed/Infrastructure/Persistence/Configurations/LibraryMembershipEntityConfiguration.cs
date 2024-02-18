@@ -1,3 +1,4 @@
+using JasperFx.Core;
 using LibraryMembership.Slimmed.Infrastructure.Persistence.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -8,6 +9,8 @@ public sealed class LibraryMembershipEntityConfiguration : IEntityTypeConfigurat
 {
     public void Configure(EntityTypeBuilder<LibraryMembershipEntity> builder)
     {
+        builder.Ignore(b => b.DomainEvents);
+        
         builder.HasKey(b => b.Id);
 
         builder.HasMany<FineEntity>(b => b.Fines)

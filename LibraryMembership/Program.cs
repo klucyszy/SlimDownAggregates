@@ -4,16 +4,14 @@ using LibraryMembership.Slimmed.Infrastructure.Persistence;
 using LibraryMembership.Slimmed.Infrastructure.Persistence.Repositories;
 using LibraryMembership.Slimmed.Presentation.Endpoints;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Wolverine;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddDbContext<LibraryMembershipContext>(opts =>
-{
-    opts.UseInMemoryDatabase("LibraryMembership");
-});
+builder.Host.UseWolverine();
 
+builder.Services.AddDatabase();
 builder.Services.AddScoped<ILibraryMembershipRepository, LibraryMembershipRepository>();
 builder.Services.AddScoped<ILibraryMembershipService, LibraryMembershipService>();
 

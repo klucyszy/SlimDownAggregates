@@ -1,10 +1,16 @@
 using System;
 using System.Collections.Generic;
+using LibraryMembership.Slimmed.Domain.LibraryMembership;
 using Microsoft.EntityFrameworkCore;
 
 namespace LibraryMembership.Slimmed.Infrastructure.Persistence.Entities;
 
-public class LibraryMembershipEntity
+public interface IAggregateRoot
+{
+    public List<IDomainEvent> DomainEvents { get; }
+}
+
+public class LibraryMembershipEntity : IAggregateRoot
 {
     public enum MembershipStatus
     {
@@ -21,4 +27,6 @@ public class LibraryMembershipEntity
     public DateTimeOffset MembershipExpiry { get; set; }
     
     public EntityState EntityState { get; set; }
+
+    public List<IDomainEvent> DomainEvents { get; } = [];
 }
