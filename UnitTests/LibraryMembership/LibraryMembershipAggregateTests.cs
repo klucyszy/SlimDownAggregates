@@ -15,11 +15,14 @@ public class LibraryMembershipAggregateTests
         BookLoan bookLoan = CreateFakeBookLoan();
         
         // Act
-        LibraryMembershipEvent.BookLoaned result = aggregate.LoanBook(bookLoan);
+        aggregate.LoanBook(bookLoan);
         
         // Assert
         aggregate.BookLoans.Should().Contain(bookLoan);
-        result.BookId.Should().Be(bookLoan.BookId);
+        aggregate.DomainEvents.Count.Should().Be(1);
+        aggregate.DomainEvents.FirstOrDefault()
+            .Should().BeOfType<LibraryMembershipEvent.BookLoaned>()
+            .Which.BookId.Should().Be(bookLoan.BookId);
     }
     
     [Fact]

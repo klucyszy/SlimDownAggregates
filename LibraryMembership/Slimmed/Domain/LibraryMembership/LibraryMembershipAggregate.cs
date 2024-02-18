@@ -1,26 +1,25 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using LibraryMembership.Shared.Domain;
 using LibraryMembership.Slimmed.Infrastructure.Persistence.Entities;
 
 namespace LibraryMembership.Slimmed.Domain.LibraryMembership;
 
-public abstract class LibraryMembershipAggregate
+public abstract class LibraryMembershipAggregate : AggregateRoot<Guid>
 {
     private readonly List<BookLoan> _bookLoans;
     private readonly List<BookReservationEntity> _bookReservations;
     private readonly List<FineEntity> _fines;
-    private readonly Guid _membershipId;
-
-    public Guid Id => _membershipId;
+    
     public IReadOnlyList<BookLoan> BookLoans => _bookLoans;
     public IReadOnlyList<BookReservationEntity> BookReservations => _bookReservations;
     public IReadOnlyList<FineEntity> Fines => _fines;
     
     private LibraryMembershipAggregate(Guid membershipId, List<BookLoan> bookLoans,
         List<BookReservationEntity> bookReservations, List<FineEntity> fines)
+        : base(membershipId)
     {
-        _membershipId = membershipId;
         _bookLoans = bookLoans;
         _bookReservations = bookReservations;
         _fines = fines;
@@ -33,7 +32,7 @@ public abstract class LibraryMembershipAggregate
         {
         }
 
-        public LibraryMembershipEvent.BookLoaned LoanBook(BookLoan loanEntity)
+        public void LoanBook(BookLoan loanEntity)
         {
             if (_bookLoans.Count >= 5)
             {
@@ -46,12 +45,12 @@ public abstract class LibraryMembershipAggregate
             }
 
             _bookLoans.Add(loanEntity);
-
-            return new LibraryMembershipEvent.BookLoaned(
-                _membershipId,
+            AddDomainEvent(new LibraryMembershipEvent.BookLoaned(
+                Id,
                 loanEntity.Id,
                 loanEntity.BookId,
-                DateTimeOffset.Now);
+                DateTimeOffset.Now)
+            );
         }
         
         // TODO: Should be possible only if there is no reservationModel for this book

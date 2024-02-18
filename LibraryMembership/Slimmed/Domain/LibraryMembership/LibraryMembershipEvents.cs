@@ -2,7 +2,7 @@ using System;
 
 namespace LibraryMembership.Slimmed.Domain.LibraryMembership;
 
-public abstract record LibraryMembershipEvent
+public abstract record LibraryMembershipEvent : IDomainEvent
 {
     public record BookLoaned(
         Guid MembershipId,
