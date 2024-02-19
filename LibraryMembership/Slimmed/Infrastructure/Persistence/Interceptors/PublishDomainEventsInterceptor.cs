@@ -28,19 +28,15 @@ public sealed class PublishDomainEventsInterceptor : ISaveChangesInterceptor
     public async Task OnSaveChangesAsync<TContext>(TContext context, CancellationToken ct = default) where TContext : DbContext
     {
         // handle for all types of ids ? or do I even need this?
-        List<IDomainEvent>? domainEvents = context.ChangeTracker?.Entries()
+        List<IDomainEvent> domainEvents = context.ChangeTracker?.Entries()
+            .Select(x => x.Entity)
             .OfType<IAggregateRoot>()
             .SelectMany(x => x.DomainEvents)
-            .ToList();
-
-        if (domainEvents is null || domainEvents.Count == 0)
-        {
-            return;
-        }
+            .ToList() ?? [];
         
         foreach(var domainEvent in domainEvents)
         {
-            await _bus.SendAsync(domainEvent);
+            await _bus.InvokeAsync(domainEvent, ct);
         }
     }
 }
