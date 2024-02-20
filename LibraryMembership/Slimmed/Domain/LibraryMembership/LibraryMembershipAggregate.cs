@@ -9,15 +9,19 @@ namespace LibraryMembership.Slimmed.Domain.LibraryMembership;
 public abstract class LibraryMembershipAggregate : AggregateRoot<Guid>
 {
     private readonly List<BookLoan> _bookLoans;
-    private readonly List<BookReservationEntity> _bookReservations;
-    private readonly List<FineEntity> _fines;
-    
     public IReadOnlyList<BookLoan> BookLoans => _bookLoans;
+    
+    private readonly List<BookReservationEntity> _bookReservations;
     public IReadOnlyList<BookReservationEntity> BookReservations => _bookReservations;
+    
+    private readonly List<FineEntity> _fines;
     public IReadOnlyList<FineEntity> Fines => _fines;
     
-    private LibraryMembershipAggregate(Guid membershipId, List<BookLoan> bookLoans,
-        List<BookReservationEntity> bookReservations, List<FineEntity> fines)
+    private LibraryMembershipAggregate(
+        Guid membershipId,
+        List<BookLoan> bookLoans,
+        List<BookReservationEntity> bookReservations,
+        List<FineEntity> fines)
         : base(membershipId)
     {
         _bookLoans = bookLoans;
@@ -25,13 +29,13 @@ public abstract class LibraryMembershipAggregate : AggregateRoot<Guid>
         _fines = fines;
     }
 
-    public sealed class Active : LibraryMembershipAggregate
+    public sealed class Active(
+        Guid membershipId,
+        List<BookLoan> bookLoans,
+        List<BookReservationEntity> bookReservations,
+        List<FineEntity> fines)
+        : LibraryMembershipAggregate(membershipId, bookLoans, bookReservations, fines)
     {
-        public Active(Guid membershipId, List<BookLoan> bookLoans, List<BookReservationEntity> bookReservations, List<FineEntity> fines)
-            : base(membershipId, bookLoans, bookReservations, fines)
-        {
-        }
-
         public void LoanBook(BookLoan loanEntity)
         {
             if (_bookLoans.Count >= 5)
@@ -54,7 +58,7 @@ public abstract class LibraryMembershipAggregate : AggregateRoot<Guid>
         }
         
         // TODO: Should be possible only if there is no reservationModel for this book
-        public void ExtendBookLoan(Guid loanId, DateTimeOffset now)
+        public void ProlongLoan(Guid loanId, DateTimeOffset now)
         {
             BookLoan? loan = _bookLoans.FirstOrDefault(l => l.Id == loanId);
             if (loan is null)
@@ -93,13 +97,13 @@ public abstract class LibraryMembershipAggregate : AggregateRoot<Guid>
         }
     }
 
-    public sealed class Suspended : LibraryMembershipAggregate
+    public sealed class Suspended(
+        Guid membershipId,
+        List<BookLoan> bookLoans,
+        List<BookReservationEntity> bookReservations,
+        List<FineEntity> fines)
+        : LibraryMembershipAggregate(membershipId, bookLoans, bookReservations, fines)
     {
-        public Suspended(Guid membershipId, List<BookLoan> bookLoans, List<BookReservationEntity> bookReservations, List<FineEntity> fines)
-            : base(membershipId, bookLoans, bookReservations, fines)
-        {
-        }
-        
         public void PayFine(Guid fineId)
         {
             FineEntity fineEntity = _fines.FirstOrDefault(f => f.Id == fineId);
@@ -117,13 +121,13 @@ public abstract class LibraryMembershipAggregate : AggregateRoot<Guid>
         }
     }
 
-    public sealed class Expired : LibraryMembershipAggregate
+    public sealed class Expired(
+        Guid membershipId,
+        List<BookLoan> bookLoans,
+        List<BookReservationEntity> bookReservations,
+        List<FineEntity> fines)
+        : LibraryMembershipAggregate(membershipId, bookLoans, bookReservations, fines)
     {
-        public Expired(Guid membershipId, List<BookLoan> bookLoans, List<BookReservationEntity> bookReservations, List<FineEntity> fines)
-            : base(membershipId, bookLoans, bookReservations, fines)
-        {
-        }
-        
         public void PayFine(Guid fineId)
         {
             FineEntity fineEntity = _fines.FirstOrDefault(f => f.Id == fineId);

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using LibraryMembership.Slimmed.Domain.LibraryMembership;
 using Microsoft.EntityFrameworkCore;
 
 namespace LibraryMembership.Slimmed.Infrastructure.Persistence.Entities;

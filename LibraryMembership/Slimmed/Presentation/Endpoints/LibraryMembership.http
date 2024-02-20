@@ -5,16 +5,20 @@
 
 ### Loan book
 
-POST {{baseUrl}}/api/library-membership/{{membershipId}}/operation/loan/{{bookId}}
+POST {{baseUrl}}/api/library-membership/{{membershipId}}/books/{{bookId}}/loan
 
 ### Return book
 
-POST {{baseUrl}}/api/library-membership/{{membershipId}}/operation/return/{{bookId}}
+POST {{baseUrl}}/api/library-membership/{{membershipId}}/books/{{bookId}}/return
+
+### Prolong loaned book
+
+POST {{baseUrl}}/api/library-membership/{{membershipId}}/books/{{bookId}}/prolong
 
 ### Reserve book
 
-POST {{baseUrl}}/api/library-membership/{{membershipId}}/operation/reserve/{{bookId}}
+POST {{baseUrl}}/api/library-membership/{{membershipId}}/books/{{bookId}}/reserve
 
 ### Cancel book reservation
 
-POST {{baseUrl}}/api/library-membership/{{membershipId}}/operation/cancel-reservation/{{bookId}}
+POST {{baseUrl}}/api/library-membership/{{membershipId}}/books/{{bookId}}/reserve

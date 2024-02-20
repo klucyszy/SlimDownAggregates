@@ -1,6 +1,6 @@
 using System;
 
-namespace LibraryMembership.Slimmed.Infrastructure.Persistence.Entities;
+namespace LibraryMembership.Slimmed.Domain.LibraryMembership;
 
 public class BookLoanEntity
 {
