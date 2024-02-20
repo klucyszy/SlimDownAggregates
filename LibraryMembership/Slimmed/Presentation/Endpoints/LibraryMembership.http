@@ -1,24 +1,24 @@
 @baseUrl = http://localhost:5285/
 
 @membershipId = 66fdfb6a-bcb9-49e2-86be-19816695051e
-@bookId = 26fdfb6a-bcb9-49e2-86be-19816695051e
+@bookId = 66fdfb6a-bcb9-49e2-86be-19816695051e
 
 ### Loan book
 
-POST {{baseUrl}}/api/library-membership/{{membershipId}}/books/{{bookId}}/loan
+POST {{baseUrl}}/api/membership/{{membershipId}}/books/{{bookId}}/loan
 
 ### Return book
 
-POST {{baseUrl}}/api/library-membership/{{membershipId}}/books/{{bookId}}/return
+PUT {{baseUrl}}/api/membership/{{membershipId}}/books/{{bookId}}/return
 
 ### Prolong loaned book
 
-POST {{baseUrl}}/api/library-membership/{{membershipId}}/books/{{bookId}}/prolong
+PUT {{baseUrl}}/api/membership/{{membershipId}}/books/{{bookId}}/prolong
 
 ### Reserve book
 
-POST {{baseUrl}}/api/library-membership/{{membershipId}}/books/{{bookId}}/reserve
+POST {{baseUrl}}/api/membership/{{membershipId}}/books/{{bookId}}/reserve
 
 ### Cancel book reservation
 
-POST {{baseUrl}}/api/library-membership/{{membershipId}}/books/{{bookId}}/reserve
+PUT {{baseUrl}}/api/membership/{{membershipId}}/books/{{bookId}}/cancel-reservation
