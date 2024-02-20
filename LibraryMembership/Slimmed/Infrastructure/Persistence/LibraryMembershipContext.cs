@@ -1,7 +1,7 @@
 using System;
 using System.Linq;
 using System.Reflection;
-using LibraryMembership.Slimmed.Domain.LibraryMembership;
+using LibraryMembership.Slimmed.Domain.LibraryMembership.Entities;
 using LibraryMembership.Slimmed.Infrastructure.Persistence.Entities;
 using Microsoft.EntityFrameworkCore;
 

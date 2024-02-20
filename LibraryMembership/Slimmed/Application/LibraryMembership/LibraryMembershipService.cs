@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using LibraryMembership.Shared;
 using LibraryMembership.Slimmed.Domain.LibraryMembership;
 using LibraryMembership.Slimmed.Domain.LibraryMembership.Abstractions;
-using LibraryMembership.Slimmed.Infrastructure.Persistence.Entities;
+using LibraryMembership.Slimmed.Domain.LibraryMembership.Entities;
 
 namespace LibraryMembership.Slimmed.Application.LibraryMembership;
 

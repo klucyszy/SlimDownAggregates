@@ -1,6 +1,6 @@
 using FluentAssertions;
 using LibraryMembership.Slimmed.Domain.LibraryMembership;
-using LibraryMembership.Slimmed.Infrastructure.Persistence.Entities;
+using LibraryMembership.Slimmed.Domain.LibraryMembership.Entities;
 
 namespace UnitTests.LibraryMembership;
 

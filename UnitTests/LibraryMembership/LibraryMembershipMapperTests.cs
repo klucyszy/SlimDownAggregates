@@ -1,5 +1,6 @@
 using FluentAssertions;
 using LibraryMembership.Slimmed.Domain.LibraryMembership;
+using LibraryMembership.Slimmed.Domain.LibraryMembership.Entities;
 using LibraryMembership.Slimmed.Infrastructure.Persistence.Entities;
 using LibraryMembership.Slimmed.Infrastructure.Persistence.Mappers;
 

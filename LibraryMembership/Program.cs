@@ -1,6 +1,3 @@
-using System;
-using System.IO;
-using System.Net.Mime;
 using LibraryMembership.Slimmed.Application.LibraryMembership;
 using LibraryMembership.Slimmed.Domain.LibraryMembership.Abstractions;
 using LibraryMembership.Slimmed.Infrastructure.Persistence;

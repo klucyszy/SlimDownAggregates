@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using LibraryMembership.Shared.Infrastructure.Persistence;
 using LibraryMembership.Slimmed.Domain.LibraryMembership;
+using LibraryMembership.Slimmed.Domain.LibraryMembership.Entities;
 using LibraryMembership.Slimmed.Infrastructure.Persistence.Entities;
 
 namespace LibraryMembership.Slimmed.Infrastructure.Persistence.Mappers;

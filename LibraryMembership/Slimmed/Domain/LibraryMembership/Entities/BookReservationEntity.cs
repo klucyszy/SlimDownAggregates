@@ -1,6 +1,6 @@
 using System;
 
-namespace LibraryMembership.Slimmed.Domain.LibraryMembership;
+namespace LibraryMembership.Slimmed.Domain.LibraryMembership.Entities;
 
 public class BookReservationEntity
 {

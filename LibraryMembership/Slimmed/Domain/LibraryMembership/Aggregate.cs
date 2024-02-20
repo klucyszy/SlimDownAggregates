@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using LibraryMembership.Shared.Domain;
+using LibraryMembership.Slimmed.Domain.LibraryMembership.Entities;
 using LibraryMembership.Slimmed.Infrastructure.Persistence.Entities;
 
 namespace LibraryMembership.Slimmed.Domain.LibraryMembership;
