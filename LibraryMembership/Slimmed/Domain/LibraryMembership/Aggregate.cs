@@ -159,6 +159,12 @@ public abstract class LibraryMembershipAggregate : AggregateRoot<Guid>
         }
 
         _bookLoans.Remove(loan);
+        AddDomainEvent(new LibraryMembershipEvent.BookReturned(
+            Id,
+            loan.Id,
+            loan.BookId,
+            DateTimeOffset.Now)
+        );
     }
 
     public static LibraryMembershipAggregate Create(Guid membershipId, List<BookLoan> bookLoans,

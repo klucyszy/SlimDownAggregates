@@ -10,4 +10,11 @@ public abstract record LibraryMembershipEvent : IDomainEvent
         Guid BookId,
         DateTimeOffset LoanDate)
     : LibraryMembershipEvent;
+    
+    public record BookReturned(
+        Guid MembershipId,
+        Guid LoanId,
+        Guid BookId,
+        DateTimeOffset LoanDate)
+        : LibraryMembershipEvent;
 }
