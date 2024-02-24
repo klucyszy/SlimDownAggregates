@@ -1,4 +1,5 @@
 using System;
+using LibraryMembership.Shared.Domain;
 
 namespace LibraryMembership.Slimmed.Domain.LibraryMembership;
 

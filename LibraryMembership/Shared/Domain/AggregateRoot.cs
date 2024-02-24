@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using LibraryMembership.Slimmed.Domain.LibraryMembership;
 
 namespace LibraryMembership.Shared.Domain;
 

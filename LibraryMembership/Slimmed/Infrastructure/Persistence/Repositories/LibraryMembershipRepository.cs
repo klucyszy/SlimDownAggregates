@@ -2,15 +2,15 @@ using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using LibraryMembership.Shared.Infrastructure.Abstractions;
 using LibraryMembership.Slimmed.Domain.LibraryMembership;
-using LibraryMembership.Slimmed.Domain.LibraryMembership.Abstractions;
 using LibraryMembership.Slimmed.Infrastructure.Persistence.Entities;
 using LibraryMembership.Slimmed.Infrastructure.Persistence.Mappers;
 using Microsoft.EntityFrameworkCore;
 
 namespace LibraryMembership.Slimmed.Infrastructure.Persistence.Repositories;
 
-public sealed class LibraryMembershipRepository : ILibraryMembershipRepository
+public sealed class LibraryMembershipRepository : IAggregateRepository<LibraryMembershipAggregate>
 {
     private readonly LibraryMembershipContext _context;
     
@@ -20,10 +20,10 @@ public sealed class LibraryMembershipRepository : ILibraryMembershipRepository
         _context = context;
     }
     
-    public async Task<LibraryMembershipAggregate?> GetAggregateAsync(Guid membershipId, CancellationToken ct)
+    public async Task<LibraryMembershipAggregate?> GetAggregateAsync(Guid id, CancellationToken ct)
     {
         return await LoadEntityWithIncludes()
-            .Where(x => x.Id == membershipId)
+            .Where(x => x.Id == id)
             .Select(x => x.ToAggregate(DateTimeOffset.Now))
             .FirstOrDefaultAsync(ct);
     }
@@ -38,7 +38,7 @@ public sealed class LibraryMembershipRepository : ILibraryMembershipRepository
             throw new InvalidOperationException("Membership not found");
         }
         
-        aggregate.ToEntity(model, _context);
+        aggregate.ToEntity(model);
         
         await _context.SaveChangesAsync(ct);
     }
@@ -46,8 +46,6 @@ public sealed class LibraryMembershipRepository : ILibraryMembershipRepository
     private IQueryable<LibraryMembershipEntity> LoadEntityWithIncludes()
     {
         return _context.LibraryMemberships
-            .Include(x => x.BookLoans)
-            .Include(x => x.BookReservations)
             .Include(x => x.Fines);
     }
 }

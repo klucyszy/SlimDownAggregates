@@ -1,3 +1,3 @@
-namespace LibraryMembership.Slimmed.Domain.LibraryMembership;
+namespace LibraryMembership.Shared.Domain;
 
 public interface IDomainEvent;

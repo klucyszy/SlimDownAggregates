@@ -9,8 +9,10 @@ public class BookLoanEntity
     public Guid MembershipId { get; private set; }
     public DateTimeOffset DueDate { get; private set; }
     public bool ExtensionApplied { get; private set; }
+    public bool Returned { get; private set; }
 
-    public BookLoanEntity(Guid id, Guid bookId, Guid membershipId, DateTimeOffset dueDate)
+    public BookLoanEntity(Guid id, Guid bookId, Guid membershipId,
+        DateTimeOffset dueDate)
     {
         Id = id;
         BookId = bookId;
@@ -24,7 +26,7 @@ public class BookLoanEntity
         return DueDate < now;
     }
 
-    public void ApplyExtension(DateTimeOffset now)
+    public void Prolong(DateTimeOffset now)
     {
         ExtensionApplied = true;
         DueDate = now.AddDays(14);

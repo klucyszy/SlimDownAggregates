@@ -12,17 +12,17 @@ public class LibraryMembershipAggregateTests
         // Arrange
         LibraryMembershipAggregate.Active aggregate = CreateFakeActiveMembershipAggregate(
             numberOfLoans: 0);
-        BookLoan bookLoan = CreateFakeBookLoan();
+        BookLoanModel bookLoanModel = CreateFakeBookLoan();
         
         // Act
-        aggregate.LoanBook(bookLoan);
+        aggregate.LoanBook(bookLoanModel);
         
         // Assert
-        aggregate.BookLoans.Should().Contain(bookLoan);
+        aggregate.BookLoans.Should().Contain(bookLoanModel);
         aggregate.DomainEvents.Count.Should().Be(1);
         aggregate.DomainEvents.FirstOrDefault()
             .Should().BeOfType<LibraryMembershipEvent.BookLoaned>()
-            .Which.BookId.Should().Be(bookLoan.BookId);
+            .Which.BookId.Should().Be(bookLoanModel.BookId);
     }
     
     [Fact]
@@ -31,10 +31,10 @@ public class LibraryMembershipAggregateTests
         // Arrange
         LibraryMembershipAggregate.Active aggregate = CreateFakeActiveMembershipAggregate(
             numberOfLoans: 5);
-        BookLoan bookLoan = new(Guid.NewGuid(), Guid.NewGuid(), DateTimeOffset.Now);
+        BookLoanModel bookLoanModel = new(Guid.NewGuid(), Guid.NewGuid(), DateTimeOffset.Now);
         
         // Act
-        Action action = () => aggregate.LoanBook(bookLoan);
+        Action action = () => aggregate.LoanBook(bookLoanModel);
         
         // Assert
         action.Should().Throw<InvalidOperationException>()
@@ -47,11 +47,11 @@ public class LibraryMembershipAggregateTests
         // Arrange
         LibraryMembershipAggregate.Active aggregate = CreateFakeActiveMembershipAggregate(
             numberOfLoans: 0);
-        BookLoan bookLoan = new(Guid.NewGuid(), Guid.NewGuid(), DateTimeOffset.Now);
+        BookLoanModel bookLoanModel = new(Guid.NewGuid(), Guid.NewGuid(), DateTimeOffset.Now);
         
         // Act
-        aggregate.LoanBook(bookLoan);
-        Action action = () => aggregate.LoanBook(bookLoan);
+        aggregate.LoanBook(bookLoanModel);
+        Action action = () => aggregate.LoanBook(bookLoanModel);
         
         // Assert
         action.Should().Throw<InvalidOperationException>()
@@ -60,7 +60,7 @@ public class LibraryMembershipAggregateTests
     
     private LibraryMembershipAggregate.Active CreateFakeActiveMembershipAggregate(int numberOfLoans = 0)
     {
-        List<BookLoan> bookLoans = Enumerable
+        List<BookLoanModel> bookLoans = Enumerable
             .Range(0, numberOfLoans)
             .Select(_ => CreateFakeBookLoan())
             .ToList();
@@ -72,8 +72,8 @@ public class LibraryMembershipAggregateTests
             new List<FineEntity>());
     }
     
-    private BookLoan CreateFakeBookLoan()
+    private BookLoanModel CreateFakeBookLoan()
     {
-        return new BookLoan(Guid.NewGuid(), Guid.NewGuid(), DateTimeOffset.Now.AddDays(30));
+        return new BookLoanModel(Guid.NewGuid(), Guid.NewGuid(), DateTimeOffset.Now.AddDays(30));
     }
 }

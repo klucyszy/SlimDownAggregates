@@ -15,9 +15,7 @@ public class LibraryMembershipContext : DbContext
     }
 
     public DbSet<LibraryMembershipEntity> LibraryMemberships { get; set; }
-    public DbSet<BookLoanEntity> BookLoans { get; set; }
     public DbSet<FineEntity> Fines { get; set; }
-    public DbSet<BookReservationEntity> BookReservations { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

@@ -1,5 +1,5 @@
+using LibraryMembership.Slimmed.Application.LibraryCart;
 using LibraryMembership.Slimmed.Application.LibraryMembership;
-using LibraryMembership.Slimmed.Domain.LibraryMembership.Abstractions;
 using LibraryMembership.Slimmed.Infrastructure.Persistence;
 using LibraryMembership.Slimmed.Infrastructure.Persistence.Repositories;
 using LibraryMembership.Slimmed.Presentation.Endpoints;
@@ -13,7 +13,7 @@ WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<LibraryMembershipContext>(opts => { opts.UseInMemoryDatabase("LibraryMembership"); });
 
 builder.Services.AddScoped<ILibraryMembershipRepository, LibraryMembershipRepository>();
-builder.Services.AddScoped<ILibraryMembershipService, LibraryMembershipService>();
+builder.Services.AddScoped<ILibraryCartService, LibraryCartService>();
 
 WebApplication app = builder.Build();
 
