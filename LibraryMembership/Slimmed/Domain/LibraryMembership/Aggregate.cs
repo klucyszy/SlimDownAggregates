@@ -1,16 +1,17 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using LibraryMembership.Shared.Domain;
+using LibraryMembership.Slimmed.Domain.LibraryCart;
 using LibraryMembership.Slimmed.Domain.LibraryMembership.Entities;
-using LibraryMembership.Slimmed.Infrastructure.Persistence.Entities;
 
 namespace LibraryMembership.Slimmed.Domain.LibraryMembership;
 
-public abstract class LibraryMembershipAggregate : AggregateRoot<Guid>
+public class LibraryMembershipAggregate : AggregateRoot<Guid>
 {
     private readonly List<FineEntity> _fines;
     public IReadOnlyList<FineEntity> Fines => _fines;
+    
+    public LibraryMembershipAggregate() {}
     
     private LibraryMembershipAggregate(
         Guid membershipId,
@@ -39,32 +40,6 @@ public abstract class LibraryMembershipAggregate : AggregateRoot<Guid>
         List<FineEntity> fines)
         : LibraryMembershipAggregate(membershipId, fines)
     {
-    }
-    
-    public static LibraryMembershipAggregate Create(Guid membershipId,
-        List<FineEntity> fines, DateTimeOffset membershipExpiry, DateTimeOffset now)
-    {
-        LibraryMembershipEntity.MembershipStatus status = EvaluateMembershipStatus(fines, membershipExpiry, now);
-        return status switch
-        {
-            LibraryMembershipEntity.MembershipStatus.Active => new Active(membershipId, fines),
-            LibraryMembershipEntity.MembershipStatus.Suspended => new Suspended(membershipId, fines),
-            LibraryMembershipEntity.MembershipStatus.Expired => new Expired(membershipId, fines),
-            _ => throw new InvalidOperationException("Invalid membership status")
-        };
-    }
-
-    private static LibraryMembershipEntity.MembershipStatus EvaluateMembershipStatus(List<FineEntity> fines,
-        DateTimeOffset membershipExpiry, DateTimeOffset now)
-    {
-        if (membershipExpiry < now)
-        {
-            return LibraryMembershipEntity.MembershipStatus.Expired;
-        }
-
-        return fines.Any(f => !f.IsPaid)
-            ? LibraryMembershipEntity.MembershipStatus.Suspended
-            : LibraryMembershipEntity.MembershipStatus.Active;
     }
 }
 

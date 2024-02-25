@@ -15,6 +15,8 @@ public abstract class AggregateRoot<TId>
     {
         Id = id;
     }
+    
+    protected AggregateRoot() { }
 
     protected void AddDomainEvent(IDomainEvent domainEvent)
         => _domainEvents.Add(domainEvent);

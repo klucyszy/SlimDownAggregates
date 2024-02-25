@@ -14,11 +14,3 @@ PUT {{baseUrl}}/api/membership/{{membershipId}}/books/{{bookId}}/return
 ### Prolong loaned book
 
 PUT {{baseUrl}}/api/membership/{{membershipId}}/books/{{bookId}}/prolong
-
-### Reserve book
-
-POST {{baseUrl}}/api/membership/{{membershipId}}/books/{{bookId}}/reserve
-
-### Cancel book reservation
-
-PUT {{baseUrl}}/api/membership/{{membershipId}}/books/{{bookId}}/cancel-reservation

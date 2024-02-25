@@ -9,6 +9,6 @@ public sealed class BookLoanEntityConfiguration : IEntityTypeConfiguration<BookL
     public void Configure(EntityTypeBuilder<BookLoanEntity> builder)
     {
         builder.HasKey(b => b.Id);
-        builder.HasIndex(b => new { b. BookId, b.MembershipId }).IsUnique();
+        builder.HasIndex(b => new { BookId = b. BookIsbn, b.MembershipId }).IsUnique();
     }
 }

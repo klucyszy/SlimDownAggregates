@@ -3,30 +3,27 @@ using System.Threading;
 using System.Threading.Tasks;
 using LibraryMembership.Shared;
 using LibraryMembership.Shared.Infrastructure.Abstractions;
+using LibraryMembership.Slimmed.Domain.LibraryMembership;
 
 namespace LibraryMembership.Slimmed.Application.LibraryMembership;
 
 public interface ILibraryMembershipService
 {
-    Task<Result> LoanBookAsync(Guid membershipId, Guid bookId, CancellationToken ct);
-    Task<Result> ReturnBookAsync(Guid membershipId, Guid bookId, CancellationToken ct);
-    Task<Result> ReserveBookAsync(Guid membershipId, Guid bookId, CancellationToken ct);
-    Task<Result> CancelBookReservationAsync(Guid membershipId, Guid bookId, CancellationToken ct);
 }
 
 public sealed class LibraryMembershipService : ILibraryMembershipService
 {
-    private readonly IAggregateRepository<LibraryCardAggregate> _libraryCardAggregateRepository;
+    private readonly IAggregateRepository<LibraryMembershipAggregate> _libraryMembershipAggregateRepository;
 
-    public LibraryCardService(IAggregateRepository<LibraryCardAggregate> libraryCardAggregateRepository)
+    public LibraryMembershipService(IAggregateRepository<LibraryMembershipAggregate> libraryMembershipAggregateRepository)
     {
-        _libraryCardAggregateRepository = libraryCardAggregateRepository;
+        _libraryMembershipAggregateRepository = libraryMembershipAggregateRepository;
     }
 
     public async Task<Result> EvaluateMembershipStatus(Guid membershipId, CancellationToken ct)
     {
         // creating aggregate itself evaluates it's state
-        LibraryCardAggregate? aggregate = await _libraryCardAggregateRepository
+        LibraryMembershipAggregate? aggregate = await _libraryMembershipAggregateRepository
             .GetAggregateAsync(membershipId, ct);
         
         if (aggregate is null)
@@ -34,7 +31,7 @@ public sealed class LibraryMembershipService : ILibraryMembershipService
             return Result.Failure("Membership not found");
         }
 
-        await _libraryCardAggregateRepository.UpdateAsync(aggregate, ct);
+        await _libraryMembershipAggregateRepository.UpdateAsync(aggregate, ct);
         
         return Result.Success();
     }
