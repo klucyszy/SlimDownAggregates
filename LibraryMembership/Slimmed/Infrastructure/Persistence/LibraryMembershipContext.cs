@@ -1,8 +1,10 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using LibraryMembership.Slimmed.Domain.LibraryCart;
+using LibraryMembership.Slimmed.Domain.LibraryMembership;
 using LibraryMembership.Slimmed.Domain.LibraryMembership.Entities;
-using LibraryMembership.Slimmed.Infrastructure.Persistence.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace LibraryMembership.Slimmed.Infrastructure.Persistence;
@@ -14,10 +16,9 @@ public class LibraryMembershipContext : DbContext
         SeedData();
     }
 
-    public DbSet<LibraryMembershipEntity> LibraryMemberships { get; set; }
-    public DbSet<BookLoanEntity> BookLoans { get; set; }
+    public DbSet<LibraryMembershipAggregate> LibraryMemberships { get; set; }
+    public DbSet<LibraryCartAggregate> LibraryCarts { get; set; }
     public DbSet<FineEntity> Fines { get; set; }
-    public DbSet<BookReservationEntity> BookReservations { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -28,17 +29,15 @@ public class LibraryMembershipContext : DbContext
 
     private void SeedData()
     {
-        if (LibraryMemberships.Any())
+        if (LibraryCarts.Any())
         {
             return;
         }
         
-        LibraryMemberships.Add(new LibraryMembershipEntity
-        {
-            Id = Guid.Parse("66fdfb6a-bcb9-49e2-86be-19816695051e"),
-            Status = LibraryMembershipEntity.MembershipStatus.Active,
-            MembershipExpiry = DateTimeOffset.Now.AddYears(1)
-        });
+        LibraryCarts.Add(new LibraryCartAggregate(
+            Guid.Parse("66fdfb6a-bcb9-49e2-86be-19816695051e"),
+            Guid.Parse("66fdfb6a-bcb9-49e2-86be-19816695051e"),
+            new List<BookLoanEntity>()));
 
         SaveChanges();
     }

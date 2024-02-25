@@ -1,53 +1,20 @@
 using System;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using LibraryMembership.Shared.Infrastructure.Abstractions;
 using LibraryMembership.Slimmed.Domain.LibraryMembership;
-using LibraryMembership.Slimmed.Domain.LibraryMembership.Abstractions;
-using LibraryMembership.Slimmed.Infrastructure.Persistence.Entities;
-using LibraryMembership.Slimmed.Infrastructure.Persistence.Mappers;
-using Microsoft.EntityFrameworkCore;
 
 namespace LibraryMembership.Slimmed.Infrastructure.Persistence.Repositories;
 
-public sealed class LibraryMembershipRepository : ILibraryMembershipRepository
+internal sealed class LibraryMembershipRepository : IAggregateRepository<LibraryMembershipAggregate>
 {
-    private readonly LibraryMembershipContext _context;
-    
-    public LibraryMembershipRepository(
-        LibraryMembershipContext context)
+    public Task<LibraryMembershipAggregate?> GetAggregateAsync(Guid id, CancellationToken ct)
     {
-        _context = context;
-    }
-    
-    public async Task<LibraryMembershipAggregate?> GetAggregateAsync(Guid membershipId, CancellationToken ct)
-    {
-        return await LoadEntityWithIncludes()
-            .Where(x => x.Id == membershipId)
-            .Select(x => x.ToAggregate(DateTimeOffset.Now))
-            .FirstOrDefaultAsync(ct);
-    }
-    
-    public async Task UpdateAsync(LibraryMembershipAggregate aggregate, CancellationToken ct)
-    {
-        LibraryMembershipEntity? model = await _context.LibraryMemberships
-            .FindAsync(aggregate.Id);
-
-        if (model is null)
-        {
-            throw new InvalidOperationException("Membership not found");
-        }
-        
-        aggregate.ToEntity(model, _context);
-        
-        await _context.SaveChangesAsync(ct);
+        throw new NotImplementedException();
     }
 
-    private IQueryable<LibraryMembershipEntity> LoadEntityWithIncludes()
+    public Task UpdateAsync(LibraryMembershipAggregate aggregate, CancellationToken ct)
     {
-        return _context.LibraryMemberships
-            .Include(x => x.BookLoans)
-            .Include(x => x.BookReservations)
-            .Include(x => x.Fines);
+        throw new NotImplementedException();
     }
 }

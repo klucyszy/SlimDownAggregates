@@ -1,6 +1,6 @@
 using System;
 using System.Threading;
-using LibraryMembership.Slimmed.Application.LibraryMembership;
+using LibraryMembership.Slimmed.Application.LibraryCart;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 
@@ -11,7 +11,7 @@ public static class LibraryMembershipEndpoints
     public static void MapLoanBookEndpoint(this WebApplication app)
     {
         app.MapPost("api/membership/{id:guid}/books/{bookId:guid}/loan", 
-            async (Guid id, Guid bookId, ILibraryMembershipService service, CancellationToken ct) =>
+            async (Guid id, Guid bookId, ILibraryCartService service, CancellationToken ct) =>
             {
                 await service.LoanBookAsync(id, bookId, ct);
 
@@ -22,7 +22,7 @@ public static class LibraryMembershipEndpoints
     public static void MapReturnBookEndpoint(this WebApplication app)
     {
         app.MapPut("api/membership/{id:guid}/books/{bookId:guid}/return", 
-            async (Guid id, Guid bookId, ILibraryMembershipService service, CancellationToken ct) =>
+            async (Guid id, Guid bookId, ILibraryCartService service, CancellationToken ct) =>
             {
                 await service.ReturnBookAsync(id, bookId, ct);
 
@@ -30,23 +30,12 @@ public static class LibraryMembershipEndpoints
             });
     }
     
-    public static void MapReserveBookEndpoint(this WebApplication app)
+    public static void MapProlongBookLoanEndpoint(this WebApplication app)
     {
-        app.MapPost("api/membership/{id:guid}/books/{bookId:guid}/reserve", 
-            async (Guid id, Guid bookId, ILibraryMembershipService service, CancellationToken ct) =>
+        app.MapPut("api/membership/{id:guid}/books/{bookId:guid}/prolong", 
+            async (Guid id, Guid bookId, ILibraryCartService service, CancellationToken ct) =>
             {
-                await service.ReserveBookAsync(id, bookId, ct);
-
-                return Results.Created();
-            });
-    }
-    
-    public static void MapCancelBookReservationEndpoint(this WebApplication app)
-    {
-        app.MapPut("api/membership/{id:guid}/books/{bookId:guid}/cancel-reservation", 
-            async (Guid id, Guid bookId, ILibraryMembershipService service, CancellationToken ct) =>
-            {
-                await service.CancelBookReservationAsync(id, bookId, ct);
+                await service.ProlongBookLoanAsync(id, bookId, ct);
 
                 return Results.NoContent();
             });

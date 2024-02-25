@@ -9,6 +9,18 @@
     <ItemGroup>
       <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.1" />
       <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="8.0.0" />
+      <PackageReference Include="Scrutor" Version="4.2.2" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Content Include="..\README.md">
+        <Link>README.md</Link>
+      </Content>
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Slimmed\Infrastructure\Persistence\Entities\" />
+      <Folder Include="Slimmed\Infrastructure\Persistence\Mappers\" />
     </ItemGroup>
 
 </Project>

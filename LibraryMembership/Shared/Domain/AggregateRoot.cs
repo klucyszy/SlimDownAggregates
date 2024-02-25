@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using LibraryMembership.Slimmed.Domain.LibraryMembership;
 
 namespace LibraryMembership.Shared.Domain;
 
@@ -16,6 +15,8 @@ public abstract class AggregateRoot<TId>
     {
         Id = id;
     }
+    
+    protected AggregateRoot() { }
 
     protected void AddDomainEvent(IDomainEvent domainEvent)
         => _domainEvents.Add(domainEvent);
