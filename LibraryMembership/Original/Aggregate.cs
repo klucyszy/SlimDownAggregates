@@ -35,7 +35,7 @@ file class LibraryMembership
 
     public void ReturnLoan(Guid loanId)
     {
-        BookLoan? loan = _bookLoans.FirstOrDefault(l => l.LoanId == loanId);
+        BookLoan loan = _bookLoans.FirstOrDefault(l => l.LoanId == loanId);
         if (loan == null)
             throw new InvalidOperationException("Loan not found");
 
@@ -51,7 +51,7 @@ file class LibraryMembership
 
     public void PayFine(Guid fineId)
     {
-        Fine? fine = _fines.FirstOrDefault(f => f.FineId == fineId);
+        Fine fine = _fines.FirstOrDefault(f => f.FineId == fineId);
         if (fine == null)
             throw new InvalidOperationException("FineModel not found");
 

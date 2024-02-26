@@ -2,23 +2,22 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using LibraryMembership.Slimmed.Domain.BookLoan;
 using LibraryMembership.Slimmed.Domain.LibraryCart;
-using LibraryMembership.Slimmed.Domain.LibraryMembership;
-using LibraryMembership.Slimmed.Domain.LibraryMembership.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace LibraryMembership.Slimmed.Infrastructure.Persistence;
 
-public class LibraryMembershipContext : DbContext
+public class LibraryContext : DbContext
 {
-    public LibraryMembershipContext(DbContextOptions<LibraryMembershipContext> options) : base(options)
+    public LibraryContext(DbContextOptions<LibraryContext> options) : base(options)
     {
         SeedData();
     }
 
-    public DbSet<LibraryMembershipAggregate> LibraryMemberships { get; set; }
-    public DbSet<LibraryCartAggregate> LibraryCarts { get; set; }
-    public DbSet<FineEntity> Fines { get; set; }
+    public DbSet<Domain.LibraryMembership.LibraryMembership> LibraryMemberships { get; set; }
+    public DbSet<LibraryCart> LibraryCarts { get; set; }
+    public DbSet<BookLoan> BookLoans { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -34,10 +33,10 @@ public class LibraryMembershipContext : DbContext
             return;
         }
         
-        LibraryCarts.Add(new LibraryCartAggregate(
+        LibraryCarts.Add(new LibraryCart(
             Guid.Parse("66fdfb6a-bcb9-49e2-86be-19816695051e"),
             Guid.Parse("66fdfb6a-bcb9-49e2-86be-19816695051e"),
-            new List<BookLoanEntity>()));
+            new List<BookLoan>()));
 
         SaveChanges();
     }

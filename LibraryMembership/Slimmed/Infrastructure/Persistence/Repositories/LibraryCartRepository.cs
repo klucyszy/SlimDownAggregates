@@ -2,37 +2,40 @@ using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using LibraryMembership.Shared.Infrastructure.Abstractions;
+using LibraryMembership.Shared.Domain.Abstractions;
 using LibraryMembership.Slimmed.Domain.LibraryCart;
 using Microsoft.EntityFrameworkCore;
 
 namespace LibraryMembership.Slimmed.Infrastructure.Persistence.Repositories;
 
-internal sealed class LibraryCartRepository : IAggregateRepository<LibraryCartAggregate>
+internal sealed class LibraryCartRepository : IAggregateRepository<LibraryCart>
 {
-    private readonly LibraryMembershipContext _context;
+    private readonly LibraryContext _context;
 
-    public LibraryCartRepository(LibraryMembershipContext context)
+    public LibraryCartRepository(LibraryContext context)
     {
         _context = context;
     }
 
-    public async Task<LibraryCartAggregate?> GetAggregateAsync(Guid id, CancellationToken ct)
+    public async Task<LibraryCart> GetAggregateAsync(Guid id, CancellationToken ct)
     {
         return await Queryable()
             .Where(a => a.Id == id)
+            .Where(a => a.ActiveBookLoans.All(l => l.Returned == false))
             .FirstOrDefaultAsync(ct);
     }
 
-    public async Task UpdateAsync(LibraryCartAggregate aggregate, CancellationToken ct)
+    public async Task UpdateAsync(LibraryCart aggregate, bool saveChanges = true, CancellationToken ct = default)
     {
-        await _context.SaveChangesAsync(ct);
+        if (saveChanges)
+        {
+            await _context.SaveChangesAsync(ct);
+        }
     }
     
-    private IQueryable<LibraryCartAggregate> Queryable()
+    private IQueryable<LibraryCart> Queryable()
     {
         return _context.LibraryCarts
             .Include(b => b.ActiveBookLoans);
-        //.ThenInclude(b => b.Where(l => l.Returned == false));
     }
 }

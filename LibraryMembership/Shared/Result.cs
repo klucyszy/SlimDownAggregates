@@ -3,9 +3,9 @@ namespace LibraryMembership.Shared;
 public sealed record Result
 {
     public bool IsSuccess { get; }
-    public string? ErrorMessage { get; }
+    public string ErrorMessage { get; }
 
-    private Result(bool isSuccess, string? errorMessage)
+    private Result(bool isSuccess, string errorMessage)
     {
         IsSuccess = isSuccess;
         ErrorMessage = errorMessage;

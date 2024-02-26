@@ -4,9 +4,9 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace LibraryMembership.Slimmed.Infrastructure.Persistence.Configurations;
 
-public sealed class FineEntityConfiguration : IEntityTypeConfiguration<FineEntity>
+public sealed class FineConfiguration : IEntityTypeConfiguration<Fine>
 {
-    public void Configure(EntityTypeBuilder<FineEntity> builder)
+    public void Configure(EntityTypeBuilder<Fine> builder)
     {
         builder.HasKey(b => b.Id);
     }

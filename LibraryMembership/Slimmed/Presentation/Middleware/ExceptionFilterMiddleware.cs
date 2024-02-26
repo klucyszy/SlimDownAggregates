@@ -20,7 +20,7 @@ public static class ExceptionFilterMiddleware
 
                 var exceptionHandlerPathFeature = context.Features.Get<IExceptionHandlerPathFeature>();
 
-                Exception? exception = exceptionHandlerPathFeature?.Error;
+                Exception exception = exceptionHandlerPathFeature?.Error;
 
                 if (exception is not null)
                 {

@@ -1,5 +1,5 @@
 using System.Reflection;
-using LibraryMembership.Shared.Infrastructure.Abstractions;
+using LibraryMembership.Shared.Domain.Abstractions;
 using LibraryMembership.Slimmed.Application.LibraryCart;
 using LibraryMembership.Slimmed.Application.LibraryMembership;
 using LibraryMembership.Slimmed.Infrastructure.Persistence;
@@ -11,7 +11,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddDbContext<LibraryMembershipContext>(opts =>
+builder.Services.AddDbContext<LibraryContext>(opts =>
 {
     opts.UseInMemoryDatabase("LibraryMembership");
 });

@@ -2,34 +2,36 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using LibraryMembership.Shared;
-using LibraryMembership.Shared.Infrastructure.Abstractions;
-using LibraryMembership.Slimmed.Domain.LibraryCart;
-using LibraryMembership.Slimmed.Domain.LibraryMembership.Entities;
+using LibraryMembership.Shared.Domain.Abstractions;
+using LibraryMembership.Slimmed.Domain.BookLoan;
 
 namespace LibraryMembership.Slimmed.Application.LibraryCart;
 
 public interface ILibraryCartService
 {
-    Task<Result> LoanBookAsync(Guid membershipId, Guid bookId, CancellationToken ct);
+    Task<Result> LoanBookAsync(Guid membershipId, string bookIsbn, CancellationToken ct);
     Task<Result> ReturnBookAsync(Guid membershipId, Guid bookId, CancellationToken ct);
     Task<Result> ProlongBookLoanAsync(Guid membershipId, Guid bookId, CancellationToken ct);
 }
 
 public sealed class LibraryCartService : ILibraryCartService
 {
-    private readonly IAggregateRepository<LibraryCartAggregate> _libraryCartAggregateRepository;
+    private readonly IAggregateRepository<Domain.LibraryCart.LibraryCart> _libraryCartAggregateRepository;
+    private readonly IAggregateRepository<BookLoan> _bookLoanAggregateRepository;
 
-    public LibraryCartService(IAggregateRepository<LibraryCartAggregate> libraryCartAggregateRepository)
+    public LibraryCartService(IAggregateRepository<Domain.LibraryCart.LibraryCart> libraryCartAggregateRepository,
+        IAggregateRepository<BookLoan> bookLoanAggregateRepository)
     {
         _libraryCartAggregateRepository = libraryCartAggregateRepository;
+        _bookLoanAggregateRepository = bookLoanAggregateRepository;
     }
 
-    public async Task<Result> LoanBookAsync(Guid membershipId, Guid bookId, CancellationToken ct)
+    public async Task<Result> LoanBookAsync(Guid membershipId, string bookIsbn, CancellationToken ct)
     {
         // load book to check it's isbn
-        var isbn = "bookIsbn";
+        var bookId = Guid.NewGuid();
         
-        LibraryCartAggregate? aggregate = await _libraryCartAggregateRepository
+        Domain.LibraryCart.LibraryCart aggregate = await _libraryCartAggregateRepository
             .GetAggregateAsync(membershipId, ct);
         
         if (aggregate is null)
@@ -37,49 +39,43 @@ public sealed class LibraryCartService : ILibraryCartService
             return Result.Failure("Library cart not found");
         }
         
-        BookLoanEntity loan = new BookLoanEntity(
-            Guid.NewGuid(),
-            isbn,
-            membershipId,
-            DateTimeOffset.Now.AddDays(14));
+        aggregate.Loan(membershipId, bookId, bookIsbn);
         
-        aggregate.Loan(loan);
-        
-        await _libraryCartAggregateRepository.UpdateAsync(aggregate, ct);
+        await _libraryCartAggregateRepository.UpdateAsync(aggregate, true, ct);
         
         return Result.Success();
     }
 
     public async Task<Result> ReturnBookAsync(Guid membershipId, Guid bookId, CancellationToken ct)
     {
-        LibraryCartAggregate? aggregate = await _libraryCartAggregateRepository
+        BookLoan aggregate = await _bookLoanAggregateRepository
             .GetAggregateAsync(membershipId, ct);
         
         if (aggregate is null)
         {
-            return Result.Failure("Library cart not found");
+            return Result.Failure("Loan not found");
         }
         
-        aggregate.Return(bookId);
+        aggregate.Return();
         
-        await _libraryCartAggregateRepository.UpdateAsync(aggregate, ct);
+        await _bookLoanAggregateRepository.UpdateAsync(aggregate, true, ct);
         
         return Result.Success();
     }
 
     public async Task<Result> ProlongBookLoanAsync(Guid membershipId, Guid bookId, CancellationToken ct)
     {
-        LibraryCartAggregate? aggregate = await _libraryCartAggregateRepository
+        BookLoan aggregate = await _bookLoanAggregateRepository
             .GetAggregateAsync(membershipId, ct);
         
         if (aggregate is null)
         {
-            return Result.Failure("Library cart not found");
+            return Result.Failure("Loan not found");
         }
         
-        aggregate.Prolong(bookId);
+        aggregate.Return();
         
-        await _libraryCartAggregateRepository.UpdateAsync(aggregate, ct);
+        await _bookLoanAggregateRepository.UpdateAsync(aggregate, true, ct);
         
         return Result.Success();
     }

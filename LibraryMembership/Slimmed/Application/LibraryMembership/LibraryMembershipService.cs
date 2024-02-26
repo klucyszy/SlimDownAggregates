@@ -2,8 +2,7 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using LibraryMembership.Shared;
-using LibraryMembership.Shared.Infrastructure.Abstractions;
-using LibraryMembership.Slimmed.Domain.LibraryMembership;
+using LibraryMembership.Shared.Domain.Abstractions;
 
 namespace LibraryMembership.Slimmed.Application.LibraryMembership;
 
@@ -13,9 +12,9 @@ public interface ILibraryMembershipService
 
 public sealed class LibraryMembershipService : ILibraryMembershipService
 {
-    private readonly IAggregateRepository<LibraryMembershipAggregate> _libraryMembershipAggregateRepository;
+    private readonly IAggregateRepository<Domain.LibraryMembership.LibraryMembership> _libraryMembershipAggregateRepository;
 
-    public LibraryMembershipService(IAggregateRepository<LibraryMembershipAggregate> libraryMembershipAggregateRepository)
+    public LibraryMembershipService(IAggregateRepository<Domain.LibraryMembership.LibraryMembership> libraryMembershipAggregateRepository)
     {
         _libraryMembershipAggregateRepository = libraryMembershipAggregateRepository;
     }
@@ -23,7 +22,7 @@ public sealed class LibraryMembershipService : ILibraryMembershipService
     public async Task<Result> EvaluateMembershipStatus(Guid membershipId, CancellationToken ct)
     {
         // creating aggregate itself evaluates it's state
-        LibraryMembershipAggregate? aggregate = await _libraryMembershipAggregateRepository
+        Domain.LibraryMembership.LibraryMembership aggregate = await _libraryMembershipAggregateRepository
             .GetAggregateAsync(membershipId, ct);
         
         if (aggregate is null)
@@ -31,7 +30,7 @@ public sealed class LibraryMembershipService : ILibraryMembershipService
             return Result.Failure("Membership not found");
         }
 
-        await _libraryMembershipAggregateRepository.UpdateAsync(aggregate, ct);
+        await _libraryMembershipAggregateRepository.UpdateAsync(aggregate, true, ct);
         
         return Result.Success();
     }

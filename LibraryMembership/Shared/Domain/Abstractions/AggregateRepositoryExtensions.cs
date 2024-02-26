@@ -1,8 +1,7 @@
-using System.Linq;
 using System.Reflection;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace LibraryMembership.Shared.Infrastructure.Abstractions;
+namespace LibraryMembership.Shared.Domain.Abstractions;
 
 public static class AggregateRepositoryExtensions
 {

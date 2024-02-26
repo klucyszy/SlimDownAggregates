@@ -1,6 +1,6 @@
 namespace UnitTests.LibraryCart;
 
-public sealed class LibraryCartAggregateTests
+public sealed class LibraryCartTests
 {
     [Fact]
     public async Task LibraryMemberCanLoanBook()

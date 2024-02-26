@@ -1,17 +1,18 @@
+using System;
 using System.Collections.Generic;
 
 namespace LibraryMembership.Shared.Domain;
 
-public abstract class AggregateRoot<TId>
+public abstract class AggregateRoot
 {
-    public TId Id { get; }
+    public Guid Id { get; }
     
     private readonly List<IDomainEvent> _domainEvents = [];
 
     public IReadOnlyCollection<IDomainEvent> DomainEvents
         => _domainEvents.AsReadOnly();
 
-    protected AggregateRoot(TId id)
+    protected AggregateRoot(Guid id)
     {
         Id = id;
     }

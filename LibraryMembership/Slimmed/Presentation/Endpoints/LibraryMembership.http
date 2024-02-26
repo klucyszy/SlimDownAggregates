@@ -1,16 +1,17 @@
 @baseUrl = http://localhost:5285/
 
 @membershipId = 66fdfb6a-bcb9-49e2-86be-19816695051e
-@bookId = 66fdfb6a-bcb9-49e2-86be-19816695051e
+@bookIsbn = test-isbn24
+@loanId = 66fdfb6a-bcb9-49e2-86be-19816695051e
 
 ### Loan book
 
-POST {{baseUrl}}/api/membership/{{membershipId}}/books/{{bookId}}/loan
+POST {{baseUrl}}/api/membership/{{membershipId}}/books/{{bookIsbn}}/loan
 
 ### Return book
 
-PUT {{baseUrl}}/api/membership/{{membershipId}}/books/{{bookId}}/return
+PUT {{baseUrl}}/api/membership/{{membershipId}}/loans/{{loanId}}/return
 
 ### Prolong loaned book
 
-PUT {{baseUrl}}/api/membership/{{membershipId}}/books/{{bookId}}/prolong
+PUT {{baseUrl}}/api/membership/{{membershipId}}/loans/{{loanId}}/prolong
