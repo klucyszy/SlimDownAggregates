@@ -1,9 +1,8 @@
 using System;
 
-namespace LibraryMembership.Slimmed.Domain.LibraryMembership.Entities;
+namespace LibraryMembership.Slimmed.Domain.LibraryMembership;
 
 public class Fine
-
 {
     public Guid Id { get; private set; }
     public decimal Amount { get; private set; }

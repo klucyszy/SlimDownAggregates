@@ -9,7 +9,7 @@ namespace LibraryMembership.Slimmed.Domain.LibraryCart;
 
 public sealed class LibraryCart : AggregateRoot
 {
-    private readonly Guid _membershipId;
+    public Guid MembershipId { get; private set; }
     
     private readonly List<BookLoan.BookLoan> _activeBookLoans;
     public IReadOnlyList<BookLoan.BookLoan> ActiveBookLoans => _activeBookLoans;
@@ -20,14 +20,14 @@ public sealed class LibraryCart : AggregateRoot
     public LibraryCart(Guid id, Guid membershipId, List<BookLoan.BookLoan> activeBookLoans)
         : base(id)
     {
-        _membershipId = membershipId;
+        MembershipId = membershipId;
         _activeBookLoans = activeBookLoans;
     }
     
-    public BookLoan.BookLoan Loan(Guid membershipId, Guid bookId, string bookIsbn)
+    public BookLoan.BookLoan Loan(Guid bookId, string bookIsbn)
     {
         BookLoan.BookLoan loan = new (
-            membershipId,
+            MembershipId,
             bookId,
             bookIsbn,
             DateTimeOffset.Now.AddDays(14));
@@ -47,7 +47,7 @@ public sealed class LibraryCart : AggregateRoot
         
         AddDomainEvent(new BookLoanEvent.BookLoaned(
             loan.Id,
-            _membershipId,
+            MembershipId,
             loan.ReturnDate));
 
         return loan;

@@ -1,4 +1,3 @@
-using LibraryMembership.Slimmed.Domain.LibraryMembership.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -9,8 +8,11 @@ public sealed class LibraryMembershipConfiguration : IEntityTypeConfiguration<Do
     public void Configure(EntityTypeBuilder<Domain.LibraryMembership.LibraryMembership> builder)
     {
         builder.HasKey(b => b.Id);
+        builder.Property(b => b.Id).ValueGeneratedOnAdd();
+        
+        builder.Ignore(b => b.DomainEvents);
 
-        builder.HasMany<Fine>(b => b.Fines)
+        builder.HasMany(b => b.Fines)
             .WithOne()
             .HasForeignKey(b => b.MembershipId);
     }

@@ -1,4 +1,3 @@
-using LibraryMembership.Slimmed.Domain.BookLoan;
 using LibraryMembership.Slimmed.Domain.LibraryCart;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -10,9 +9,12 @@ public sealed class LibraryCartConfiguration : IEntityTypeConfiguration<LibraryC
     public void Configure(EntityTypeBuilder<LibraryCart> builder)
     {
         builder.HasKey(b => b.Id);
+        builder.Property(b => b.Id).ValueGeneratedOnAdd();
+        
+        builder.Ignore(b => b.DomainEvents);
 
-        builder.HasMany<BookLoan>(b => b.ActiveBookLoans)
+        builder.HasMany(b => b.ActiveBookLoans)
             .WithOne()
-            .HasForeignKey(b => b.Id);
+            .HasForeignKey(b => b.LoanedById);
     }
 }

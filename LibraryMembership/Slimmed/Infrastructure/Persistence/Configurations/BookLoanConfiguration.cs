@@ -9,6 +9,10 @@ public sealed class BookLoanConfiguration : IEntityTypeConfiguration<BookLoan>
     public void Configure(EntityTypeBuilder<BookLoan> builder)
     {
         builder.HasKey(b => b.Id);
-        builder.HasIndex(b => new { b.BookIsbn, b.MembershipId }).IsUnique();
+        builder.Property(b => b.Id).ValueGeneratedOnAdd();
+        
+        builder.Ignore(b => b.DomainEvents);
+        
+        builder.HasIndex(b => new { b.BookIsbn, MembershipId = b.LoanedById }).IsUnique();
     }
 }

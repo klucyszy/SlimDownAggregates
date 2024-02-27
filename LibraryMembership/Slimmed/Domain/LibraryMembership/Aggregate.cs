@@ -1,12 +1,17 @@
 using System;
 using System.Collections.Generic;
 using LibraryMembership.Shared.Domain;
-using LibraryMembership.Slimmed.Domain.LibraryMembership.Entities;
 
 namespace LibraryMembership.Slimmed.Domain.LibraryMembership;
 
-public class LibraryMembership : AggregateRoot
+public sealed class LibraryMembership : AggregateRoot
 {
+    public enum MembershipStatus
+    {
+        Active,
+        Suspended
+    }
+    
     private readonly List<Fine> _fines;
     public IReadOnlyList<Fine> Fines => _fines;
     

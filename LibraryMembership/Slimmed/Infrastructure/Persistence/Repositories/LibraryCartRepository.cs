@@ -21,7 +21,6 @@ internal sealed class LibraryCartRepository : IAggregateRepository<LibraryCart>
     {
         return await Queryable()
             .Where(a => a.Id == id)
-            .Where(a => a.ActiveBookLoans.All(l => l.Returned == false))
             .FirstOrDefaultAsync(ct);
     }
 
@@ -36,6 +35,6 @@ internal sealed class LibraryCartRepository : IAggregateRepository<LibraryCart>
     private IQueryable<LibraryCart> Queryable()
     {
         return _context.LibraryCarts
-            .Include(b => b.ActiveBookLoans);
+            .Include(b => b.ActiveBookLoans.Where(bl => bl.Returned == false));
     }
 }
