@@ -16,10 +16,10 @@ public interface ILibraryCartService
 
 public sealed class LibraryCartService : ILibraryCartService
 {
-    private readonly IAggregateRepository<Domain.LibraryCart.LibraryCart> _libraryCartAggregateRepository;
+    private readonly IAggregateRepository<Domain.LibraryCart.LibraryCartAggregate> _libraryCartAggregateRepository;
     private readonly IAggregateRepository<BookLoan> _bookLoanAggregateRepository;
 
-    public LibraryCartService(IAggregateRepository<Domain.LibraryCart.LibraryCart> libraryCartAggregateRepository,
+    public LibraryCartService(IAggregateRepository<Domain.LibraryCart.LibraryCartAggregate> libraryCartAggregateRepository,
         IAggregateRepository<BookLoan> bookLoanAggregateRepository)
     {
         _libraryCartAggregateRepository = libraryCartAggregateRepository;
@@ -31,7 +31,7 @@ public sealed class LibraryCartService : ILibraryCartService
         // load book to check it's isbn
         var bookId = Guid.NewGuid();
         
-        Domain.LibraryCart.LibraryCart aggregate = await _libraryCartAggregateRepository
+        Domain.LibraryCart.LibraryCartAggregate aggregate = await _libraryCartAggregateRepository
             .GetAggregateAsync(membershipId, ct);
         
         if (aggregate is null)

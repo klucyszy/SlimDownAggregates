@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace LibraryMembership.Slimmed.Infrastructure.Persistence.Repositories;
 
-internal sealed class LibraryCartRepository : IAggregateRepository<LibraryCart>
+internal sealed class LibraryCartRepository : IAggregateRepository<LibraryCartAggregate>
 {
     private readonly LibraryContext _context;
 
@@ -17,14 +17,14 @@ internal sealed class LibraryCartRepository : IAggregateRepository<LibraryCart>
         _context = context;
     }
 
-    public async Task<LibraryCart> GetAggregateAsync(Guid id, CancellationToken ct)
+    public async Task<LibraryCartAggregate> GetAggregateAsync(Guid id, CancellationToken ct)
     {
         return await Queryable()
             .Where(a => a.Id == id)
             .FirstOrDefaultAsync(ct);
     }
 
-    public async Task UpdateAsync(LibraryCart aggregate, bool saveChanges = true, CancellationToken ct = default)
+    public async Task UpdateAsync(LibraryCartAggregate aggregate, bool saveChanges = true, CancellationToken ct = default)
     {
         if (saveChanges)
         {
@@ -32,7 +32,7 @@ internal sealed class LibraryCartRepository : IAggregateRepository<LibraryCart>
         }
     }
     
-    private IQueryable<LibraryCart> Queryable()
+    private IQueryable<LibraryCartAggregate> Queryable()
     {
         return _context.LibraryCarts
             .Include(b => b.ActiveBookLoans.Where(bl => bl.Returned == false));

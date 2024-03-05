@@ -7,27 +7,22 @@ using LibraryMembership.Slimmed.Domain.BookLoan;
 
 namespace LibraryMembership.Slimmed.Domain.LibraryCart;
 
-public sealed class LibraryCart : AggregateRoot
+public sealed class LibraryCartAggregate : AggregateRoot
 {
-    public Guid MembershipId { get; private set; }
-    
+    private readonly Guid _membershipId;
     private readonly List<BookLoan.BookLoan> _activeBookLoans;
-    public IReadOnlyList<BookLoan.BookLoan> ActiveBookLoans => _activeBookLoans;
 
-    // for EF
-    private LibraryCart() { }
-
-    public LibraryCart(Guid id, Guid membershipId, List<BookLoan.BookLoan> activeBookLoans)
+    public LibraryCartAggregate(Guid id, Guid membershipId, List<BookLoan.BookLoan> activeBookLoans)
         : base(id)
     {
-        MembershipId = membershipId;
+        _membershipId = membershipId;
         _activeBookLoans = activeBookLoans;
     }
     
     public BookLoan.BookLoan Loan(Guid bookId, string bookIsbn)
     {
         BookLoan.BookLoan loan = new (
-            MembershipId,
+            _membershipId,
             bookId,
             bookIsbn,
             DateTimeOffset.Now.AddDays(14));
@@ -47,7 +42,7 @@ public sealed class LibraryCart : AggregateRoot
         
         AddDomainEvent(new BookLoanEvent.BookLoaned(
             loan.Id,
-            MembershipId,
+            _membershipId,
             loan.ReturnDate));
 
         return loan;

@@ -15,10 +15,4 @@ public class Fine
         Amount = amount;
         IsPaid = false;
     }
-
-    // Methods to handle fine payment
-    public void MarkAsPaid()
-    {
-        IsPaid = true;
-    }
 }

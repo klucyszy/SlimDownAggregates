@@ -1,4 +1,4 @@
-using LibraryMembership.Slimmed.Domain.LibraryCart;
+using LibraryMembership.Slimmed.Infrastructure.Persistence.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -11,9 +11,7 @@ public sealed class LibraryCartConfiguration : IEntityTypeConfiguration<LibraryC
         builder.HasKey(b => b.Id);
         builder.Property(b => b.Id).ValueGeneratedOnAdd();
         
-        builder.Ignore(b => b.DomainEvents);
-
-        builder.HasMany(b => b.ActiveBookLoans)
+        builder.HasMany(b => b.BookLoans)
             .WithOne()
             .HasForeignKey(b => b.LoanedById);
     }

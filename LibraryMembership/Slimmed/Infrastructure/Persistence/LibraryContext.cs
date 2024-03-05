@@ -2,8 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using LibraryMembership.Slimmed.Domain.BookLoan;
-using LibraryMembership.Slimmed.Domain.LibraryCart;
+using LibraryMembership.Slimmed.Infrastructure.Persistence.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace LibraryMembership.Slimmed.Infrastructure.Persistence;
@@ -15,7 +14,7 @@ public class LibraryContext : DbContext
         SeedData();
     }
 
-    public DbSet<Domain.LibraryMembership.LibraryMembership> LibraryMemberships { get; set; }
+    public DbSet<Entities.LibraryMembership> LibraryMemberships { get; set; }
     public DbSet<LibraryCart> LibraryCarts { get; set; }
     public DbSet<BookLoan> BookLoans { get; set; }
 
@@ -32,12 +31,13 @@ public class LibraryContext : DbContext
         {
             return;
         }
-        
-        LibraryCarts.Add(new LibraryCart(
-            Guid.Parse("66fdfb6a-bcb9-49e2-86be-19816695051e"),
-            Guid.Parse("66fdfb6a-bcb9-49e2-86be-19816695051e"),
-            new List<BookLoan>()));
 
+        LibraryCarts.Add(new LibraryCart
+        {
+            Id = Guid.Parse("66fdfb6a-bcb9-49e2-86be-19816695051e"),
+            MembershipId = Guid.Parse("66fdfb6a-bcb9-49e2-86be-19816695051e")
+        });
+        
         SaveChanges();
     }
 }
