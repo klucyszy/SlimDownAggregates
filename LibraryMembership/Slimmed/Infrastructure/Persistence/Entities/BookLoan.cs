@@ -8,7 +8,7 @@ public sealed class BookLoan
     public Guid LoanedById { get; set; }
     public Guid BookId { get; set; }
     public string BookIsbn { get; set; }
-    public int ProlongedTimes { get; set; }
+    public int Prolongations { get; set; }
     public bool Returned { get; set; }
     public DateTimeOffset ReturnDate { get; set; }
 }

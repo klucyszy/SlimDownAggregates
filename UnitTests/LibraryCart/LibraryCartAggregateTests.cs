@@ -12,9 +12,9 @@ public sealed class LibraryCartAggregateTests
         LibraryMembership.Slimmed.Domain.LibraryCart.LibraryCartAggregate cartAggregate = new (
             Guid.NewGuid(),
             Guid.NewGuid(),
-            new List<BookLoan>());
+            new List<BookLoanAggregate>());
         
-        BookLoan loan = cartAggregate.Loan(Guid.NewGuid(), "978-3-16-148410-0");
+        BookLoanAggregate loan = cartAggregate.Loan(Guid.NewGuid(), "978-3-16-148410-0");
         
         loan.Should().NotBeNull();
         cartAggregate.ActiveBookLoans.Count.Should().Be(1);
@@ -26,7 +26,7 @@ public sealed class LibraryCartAggregateTests
         LibraryMembership.Slimmed.Domain.LibraryCart.LibraryCartAggregate cartAggregate = new (
             Guid.NewGuid(),
             Guid.NewGuid(),
-            new List<BookLoan>());
+            new List<BookLoanAggregate>());
         
         cartAggregate.Loan(Guid.NewGuid(), "978-3-16-148410-0");
         cartAggregate.Loan(Guid.NewGuid(), "978-3-16-148410-1");
@@ -46,7 +46,7 @@ public sealed class LibraryCartAggregateTests
         LibraryMembership.Slimmed.Domain.LibraryCart.LibraryCartAggregate cartAggregate = new (
             Guid.NewGuid(),
             Guid.NewGuid(),
-            new List<BookLoan>());
+            new List<BookLoanAggregate>());
         
         cartAggregate.Loan(Guid.NewGuid(), "978-3-16-148410-0");
         

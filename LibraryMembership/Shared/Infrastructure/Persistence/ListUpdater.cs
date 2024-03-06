@@ -15,30 +15,30 @@ public static class ListUpdater
         DbContext context
     )
     {
-        var toUpdate = aggregateList
-            .Where(agrItem => entityList.Any(entItem => matches(entItem, agrItem)))
+        List<TAggregate> toUpdate = aggregateList
+            .Where(aggregateItem => entityList.Any(entityItem => matches(entityItem, aggregateItem)))
             .ToList();
-        var toAdd = aggregateList
+        List<TAggregate> toAdd = aggregateList
             .Except(toUpdate)
             .ToList();
-        var toRemove = entityList
-            .Where(entItem => aggregateList.All(agrItem => !matches(entItem, agrItem)))
+        List<TEntity> toRemove = entityList
+            .Where(entityItem => aggregateList.All(agrItem => !matches(entityItem, agrItem)))
             .ToList();
 
-        foreach (var updated in toUpdate)
+        foreach (TAggregate updated in toUpdate)
         {
-            var current = entityList.Single(entItem => matches(entItem, updated));
+            TEntity current = entityList.Single(entItem => matches(entItem, updated));
             //onUpdate(current, updated);
         }
 
-        foreach (var added in toAdd)
+        foreach (TAggregate added in toAdd)
         {
-            var trackAdded = onAdd(added);
+            TEntity trackAdded = onAdd(added);
             entityList.Add(trackAdded);
             context.Add(trackAdded);
         }
 
-        foreach (var removed in toRemove)
+        foreach (TEntity removed in toRemove)
         {
             entityList.Remove(removed);
             context.Remove(removed);

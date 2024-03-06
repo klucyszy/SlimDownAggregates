@@ -4,7 +4,7 @@ using LibraryMembership.Shared.Domain;
 
 namespace LibraryMembership.Slimmed.Domain.LibraryMembership;
 
-public sealed class LibraryMembership : AggregateRoot
+public sealed class LibraryMembershipAggregate : AggregateRoot
 {
     public enum MembershipStatus
     {
@@ -15,9 +15,9 @@ public sealed class LibraryMembership : AggregateRoot
     private readonly List<Fine> _fines;
     public IReadOnlyList<Fine> Fines => _fines;
     
-    public LibraryMembership() {}
+    public LibraryMembershipAggregate() {}
     
-    private LibraryMembership(
+    private LibraryMembershipAggregate(
         Guid membershipId,
         List<Fine> fines)
         : base(membershipId)

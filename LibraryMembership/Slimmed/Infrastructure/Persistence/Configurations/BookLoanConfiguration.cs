@@ -1,4 +1,5 @@
 using LibraryMembership.Slimmed.Domain.BookLoan;
+using LibraryMembership.Slimmed.Infrastructure.Persistence.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -10,8 +11,6 @@ public sealed class BookLoanConfiguration : IEntityTypeConfiguration<BookLoan>
     {
         builder.HasKey(b => b.Id);
         builder.Property(b => b.Id).ValueGeneratedOnAdd();
-        
-        builder.Ignore(b => b.DomainEvents);
         
         builder.HasIndex(b => new { b.BookIsbn, MembershipId = b.LoanedById }).IsUnique();
     }

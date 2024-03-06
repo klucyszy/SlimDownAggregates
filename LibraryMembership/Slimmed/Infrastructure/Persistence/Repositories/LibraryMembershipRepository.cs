@@ -2,17 +2,18 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using LibraryMembership.Shared.Domain.Abstractions;
+using LibraryMembership.Slimmed.Domain.LibraryMembership;
 
 namespace LibraryMembership.Slimmed.Infrastructure.Persistence.Repositories;
 
-internal sealed class LibraryMembershipRepository : IAggregateRepository<Domain.LibraryMembership.LibraryMembership>
+internal sealed class LibraryMembershipRepository : IAggregateRepository<LibraryMembershipAggregate>
 {
-    public Task<Domain.LibraryMembership.LibraryMembership> GetAggregateAsync(Guid id, CancellationToken ct)
+    public Task<LibraryMembershipAggregate> GetAggregateAsync(Guid id, CancellationToken ct)
     {
         throw new NotImplementedException();
     }
 
-    public Task UpdateAsync(Domain.LibraryMembership.LibraryMembership aggregate, bool saveChanges = true, CancellationToken ct = default)
+    public Task UpdateAsync(LibraryMembershipAggregate aggregate, CancellationToken ct = default)
     {
         throw new NotImplementedException();
     }

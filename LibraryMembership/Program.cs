@@ -2,6 +2,7 @@ using System.Reflection;
 using LibraryMembership.Shared.Domain.Abstractions;
 using LibraryMembership.Slimmed.Application.LibraryCart;
 using LibraryMembership.Slimmed.Application.LibraryMembership;
+using LibraryMembership.Slimmed.Domain.Shared;
 using LibraryMembership.Slimmed.Infrastructure.Persistence;
 using LibraryMembership.Slimmed.Presentation.Endpoints;
 using LibraryMembership.Slimmed.Presentation.Middleware;
@@ -16,6 +17,7 @@ builder.Services.AddDbContext<LibraryContext>(opts =>
     opts.UseInMemoryDatabase("LibraryMembership");
 });
 
+builder.Services.AddClock();
 builder.Services.AddAggregateRepositories(Assembly.GetExecutingAssembly());
 
 builder.Services.AddScoped<ILibraryCartService, LibraryCartService>();
